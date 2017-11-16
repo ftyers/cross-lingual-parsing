@@ -13,4 +13,4 @@
 
 # Embeddings
 
-* Long Duong, Hiroshi Kanayama, Tengfei Ma, Steven Bird and Trevor Cohn (2017) "Learning Crosslingual Word Embeddings without Bilingual Corpora". EACL 2017
+* Long Duong, Hiroshi Kanayama, Tengfei Ma, Steven Bird and Trevor Cohn (2017) "Learning Crosslingual Word Embeddings without Bilingual Corpora". EACL 2017 http://aclweb.org/anthology/D/D16/D16-1136.pdf
