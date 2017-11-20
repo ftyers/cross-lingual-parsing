@@ -1,0 +1,3 @@
+Nov, 20.
+Parsing accuracy for Old Church Slavonic.
+Parsing from gold tokenization with gold tags - forms: 10100, UAS: 82.51%, LAS: 77.50%
