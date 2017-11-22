@@ -12,3 +12,9 @@
 * Marina: 
 * Kostya: Get baseline results for delexicalised parsing for languages of interest
 * Paša: Annotate text in Belarusian (get text from Olya)
+
+## 21st November, 2017
+
+### Summary
+
+* Learned how to use CoNLL evaluation script and fastalign.
