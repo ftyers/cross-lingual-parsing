@@ -10,7 +10,7 @@
 
 ### Team
 
-* Kostya Vinogorodskiy
+* Kostya Vinogorodskiy kvinog54@gmail.com
 * Marina Kustova
-* Sasha Martynova
-* Pasha Stepachev
+* Sasha Martynova alex250396@gmail.com
+* Pasha Stepachev pavel.stepachev@yandex.ru
