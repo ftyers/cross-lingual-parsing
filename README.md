@@ -1,11 +1,14 @@
 # cross-lingual-parsing
 
-## Mentors
+* Using data from language A to parse language B
+* No use of annotated data for language B
+
+### Mentors
 
 * Olga Lyashevskaya
 * Francis Tyers
 
-## Team
+### Team
 
 * Kostya Vinogorodskiy
 * Marina Kustova
