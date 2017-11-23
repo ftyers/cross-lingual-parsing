@@ -1,13 +1,13 @@
 # cross-lingual-parsing
 
-##Mentors
+## Mentors
 
-*Olga Lyashevskaya
-*Francis Tyers
+* Olga Lyashevskaya
+* Francis Tyers
 
-##Team
+## Team
 
-*Kostya Vinogorodskiy
-*Marina Kustova
-*Sasha Martynova
-*Pasha Stepachev
+* Kostya Vinogorodskiy
+* Marina Kustova
+* Sasha Martynova
+* Pasha Stepachev
