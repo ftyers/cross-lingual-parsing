@@ -18,3 +18,5 @@
 ### Summary
 
 * Learned how to use CoNLL evaluation script and fastalign.
+## 7th December
+
