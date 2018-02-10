@@ -18,6 +18,7 @@
 ### Summary
 
 * Learned how to use CoNLL evaluation script and fastalign.
+
 ## 7th December
 
 ### Tasks
@@ -25,3 +26,14 @@
 * Paša: download wikipedia in Yiddish and translate it into German using Google translation or some other MT -- by Monday
 * Marina: align Yiddish text with German translation (+ tokenizator for Yiddish) and parse the translated German text with UD-pipe  -- by Thursday
 * Saša: transfer the structures from German to Yiddish -- by Sunday
+
+## 10th February, 2018
+
+* Course paper will be conference paper, maybe EMNLP
+* Multiple translations + multiple parsers -> MST? 
+
+### Tasks 
+
+* Paša: Get the sentence alignment thing working, basic version
+* Saša: Given a CoNLL-U file + parallel corpus/alignment -> new CoNLL-U file.
+* Kostya: Sentence alignment with Google, basic version
