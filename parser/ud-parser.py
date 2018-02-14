@@ -73,7 +73,10 @@ def main():
 			if ud_res[i][j+1][2] != '.':
 				ud_res[i][j+1][2] = '_'
 
-			file.write('	'.join(ud_res[i][j+1]) + '\n')
+			# discard XPOS and FEATS for now
+			ud_res[i][j+1][4] = '_' 
+			ud_res[i][j+1][5] = '_'
+			file.write('\t'.join(ud_res[i][j+1]) + '\n')
 		file.write('\n')
 	file.close() 
 
