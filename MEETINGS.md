@@ -42,6 +42,6 @@
 
 ### Tasks
 
-* Saša: Deal with sub-surfaceform tokens, check out eflomal
+* Saša: Deal with sub-surfaceform tokens, check out eflomal, add testcases for sub-surfaceform tokens
 * Paša: Sentence segmenter for Yiddish, translate sentence segmented stuff, upload to github
 * Kostya: Translate sentence segmented stuff, upload to github
