@@ -55,13 +55,13 @@ def main():
 	ud_res = ud_parse(ud)
 	corpora_res = corpora_arr(corpora)
 
-	file.write('# newdoc')
+	file.write('# newdoc\n')
 
 	for i in range(0, len(align_res)):
 
-		file.write('# newpar')	
-		file.write('# sent_id = ' + str(i+1))
-		file.write('# text = ' + ' '.join(corpora_res[i][1]))
+		file.write('# newpar\n')	
+		file.write('# sent_id = ' + str(i+1) + '\n')
+		file.write('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
 
 		for j in range(0, len(align_res[i])):
 			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
@@ -71,7 +71,7 @@ def main():
 			if ud_res[i][j+1][2] != '.':
 				ud_res[i][j+1][2] = '_'
 
-			file.write('	'.join(ud_res[i][j+1]))
+			file.write('	'.join(ud_res[i][j+1]) + '\n')
 
 	file.close() 
 
