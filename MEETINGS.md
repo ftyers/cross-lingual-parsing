@@ -37,3 +37,11 @@
 * Paša: Get the sentence alignment thing working, basic version
 * Saša: Given a CoNLL-U file + parallel corpus/alignment -> new CoNLL-U file.
 * Kostya: Sentence alignment with Google, basic version
+
+## 14th February
+
+### Tasks
+
+* Saša: Deal with sub-surfaceform tokens, check out eflomal
+* Paša: Sentence segmenter for Yiddish, translate sentence segmented stuff, upload to github
+* Kostya: Translate sentence segmented stuff, upload to github
