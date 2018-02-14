@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 
 align_sents = open('fast_align_res.txt', 'r')
 align = align_sents.readlines()
@@ -49,7 +50,8 @@ def ud_parse(ud):
 
 
 def main():
-	file = open('cross_lingual_results.txt','a')
+	#file = open('cross_lingual_results.txt','a')
+	file = sys.stdout
 
 	align_res = align_arr(align)
 	ud_res = ud_parse(ud)
@@ -72,7 +74,7 @@ def main():
 				ud_res[i][j+1][2] = '_'
 
 			file.write('	'.join(ud_res[i][j+1]) + '\n')
-
+		file.write('\n')
 	file.close() 
 
 
