@@ -50,6 +50,6 @@
 
 ## Tasks 
 
-* Saša: Finish script, run it on the German--Yiddish data (at least 10%)
+* Saša: Finish script, run it on the German--Yiddish data (at least 10%), do the list of Yiddish orthographical stuff
 * Paša: Finish translating, aligning and running the German translation through UDPipe and upload all data to GitHub
 * Kostya: Finish translating, aligning and running the German translation through UDPipe and upload all data to GitHub 
