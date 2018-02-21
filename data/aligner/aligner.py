@@ -12,7 +12,7 @@ deutsch_splitted = deutsch_preprocessed.split('\n')
 yiddish_splitted = yiddish_toalign.split('\n') 
 aligned = open('aligned_corpora.txt', 'w', encoding='utf-8', errors='ignore') 
 for x, y in zip(yiddish_splitted, deutsch_splitted):
-    if len(x) and len(y) > 0:
+    if len(x) and len(y) > 10:
         print("{1}  |||  {0}".format(x.strip(), y.strip()), file = aligned)
 aligned.close()
 
