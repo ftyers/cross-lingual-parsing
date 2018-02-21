@@ -45,3 +45,11 @@
 * Saša: Deal with sub-surfaceform tokens, check out eflomal, add testcases for sub-surfaceform tokens
 * Paša: Sentence segmenter for Yiddish, translate sentence segmented stuff, upload to github
 * Kostya: Translate sentence segmented stuff, upload to github
+
+## 21st February
+
+## Tasks 
+
+* Saša: Finish script, run it on the German--Yiddish data (at least 10%)
+* Paša: Finish translating, aligning and running the German translation through UDPipe and upload all data to GitHub
+* Kostya: Finish translating, aligning and running the German translation through UDPipe and upload all data to GitHub 
