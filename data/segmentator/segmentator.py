@@ -18,6 +18,6 @@ yiddish_reversed = (string_reverse(yiddish_onestring))
 yiddish_reversed_tokenized = yiddish_reversed.split(".")
 yiddish_segmented = open("yiddish_segmented.txt","w", encoding='utf-8', errors='ignore')
 for i in yiddish_reversed_tokenized:
-    print (string_reverse(i) + ' .\n', file = yiddish_segmented)
+    print (string_reverse(i) + '\n', file = yiddish_segmented)
 yiddish_segmented.close()    
 
