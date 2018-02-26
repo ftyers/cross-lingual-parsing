@@ -49,6 +49,127 @@ def ud_parse(ud):
 	return(doc)
 
 
+def zum_align(align, ud_indexes):
+	d = {}
+	point = ''
+	before_zum = True
+	for i in ud_indexes:
+		if i in point:
+			continue
+		try:
+			if before_zum == 0:
+				# print(i)
+				d[int(i)-1] = align[int(i)-2]
+		except KeyError:
+			continue
+		if '-' in i:
+			before_zum = False
+			zum = i.split('-')	
+			d[int(zum[0])-1] = align[int(zum[0])-1]
+			d[int(zum[1])-1] = align[int(zum[0])-1]
+			before_zum = 0
+			point += i
+		if before_zum is True:
+			d[int(i)-1] = align[int(i)-1]
+	return d
+
+
+
+
+def test():
+	#file = open('cross_lingual_results.txt','a')
+	file = sys.stdout
+
+	align_res = align_arr(align)
+	ud_res = ud_parse(ud)
+	corpora_res = corpora_arr(corpora)
+	print('# newdoc\n')
+
+	for i in range(0, len(align_res)):
+		print('# newpar\n')	
+		print('# sent_id = ' + str(i+1) + '\n')
+		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
+
+		germ_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
+
+		if '-' in ''.join(germ_indexes):
+			# print(ud_res[i])
+			print(zum_align(align_res[i], germ_indexes))
+		else:
+			print(align_res[i])
+
+		
+
+
+test()
+
+
+def main_test(i):
+	#file = open('cross_lingual_results.txt','a')
+	file = sys.stdout
+
+	align_res = align_arr(align)
+	ud_res = ud_parse(ud)
+	corpora_res = corpora_arr(corpora)
+
+	print('# newdoc\n')
+
+	for i in range(0, len(align_res)):
+
+		print('# newpar\n')	
+		print('# sent_id = ' + str(i+1) + '\n')
+		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
+
+		for j in range(0, len(align_res[i])):
+			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
+			if int(ud_res[i][j+1][6]) != 0:
+				ud_res[i][j+1][6] = str(align_res[i][int(ud_res[i][j+1][6])-1] + 1)
+			ud_res[i][j+1][1] = corpora_res[i][1][int(ud_res[i][j+1][0])-1]
+			if ud_res[i][j+1][2] != '.':
+				ud_res[i][j+1][2] = '_'
+
+			# discard XPOS and FEATS for now
+			ud_res[i][j+1][4] = '_' 
+			ud_res[i][j+1][5] = '_'
+			print('\t'.join(ud_res[i][j+1]) + '\n')
+		print('\n') 
+
+
+
+
+def main_test():
+	#file = open('cross_lingual_results.txt','a')
+	file = sys.stdout
+
+	align_res = align_arr(align)
+	ud_res = ud_parse(ud)
+	corpora_res = corpora_arr(corpora)
+
+	print('# newdoc\n')
+
+	for i in range(0, len(align_res)):
+
+		print('# newpar\n')	
+		print('# sent_id = ' + str(i+1) + '\n')
+		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
+
+		for j in range(0, len(align_res[i])):
+			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
+			if int(ud_res[i][j+1][6]) != 0:
+				ud_res[i][j+1][6] = str(align_res[i][int(ud_res[i][j+1][6])-1] + 1)
+			ud_res[i][j+1][1] = corpora_res[i][1][int(ud_res[i][j+1][0])-1]
+			if ud_res[i][j+1][2] != '.':
+				ud_res[i][j+1][2] = '_'
+
+			# discard XPOS and FEATS for now
+			ud_res[i][j+1][4] = '_' 
+			ud_res[i][j+1][5] = '_'
+			print('\t'.join(ud_res[i][j+1]) + '\n')
+		print('\n') 
+
+
+
+
 def main():
 	#file = open('cross_lingual_results.txt','a')
 	file = sys.stdout
@@ -78,12 +199,7 @@ def main():
 			ud_res[i][j+1][5] = '_'
 			file.write('\t'.join(ud_res[i][j+1]) + '\n')
 		file.write('\n')
-	file.close() 
-
-
-
-main()
-
+	file.close()
 
 
 
