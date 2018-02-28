@@ -74,134 +74,45 @@ def zum_align(align, ud_indexes):
 	return d
 
 
+def main_test(i, align_sent, ud_sent, corpora_sent, file):
+	for j in range(0, len(align_sent)):
+		if '-' in ud_sent[j+1][0]:
+			continue
 
+		ud_sent[j+1][0] = str(align_sent[int(ud_sent[j+1][0])-1] + 1)
+		if int(ud_sent[j+1][6]) != 0:
+			ud_sent[j+1][6] = str(align_sent[int(ud_sent[j+1][6])-1] + 1)
+		ud_sent[j+1][1] = corpora_sent[1][int(ud_sent[j+1][0])-1]
+		if ud_sent[j+1][2] != '.':
+			ud_sent[j+1][2] = '_'
 
-def test():
-	#file = open('cross_lingual_results.txt','a')
-	file = sys.stdout
-
-	align_res = align_arr(align)
-	ud_res = ud_parse(ud)
-	corpora_res = corpora_arr(corpora)
-	print('# newdoc\n')
-
-	for i in range(0, len(align_res)):
-		print('# newpar\n')	
-		print('# sent_id = ' + str(i+1) + '\n')
-		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
-
-		germ_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
-
-		if '-' in ''.join(germ_indexes):
-			# print(ud_res[i])
-			print(zum_align(align_res[i], germ_indexes))
-		else:
-			print(align_res[i])
-
-		
-
-
-test()
-
-
-def main_test(i):
-	#file = open('cross_lingual_results.txt','a')
-	file = sys.stdout
-
-	align_res = align_arr(align)
-	ud_res = ud_parse(ud)
-	corpora_res = corpora_arr(corpora)
-
-	print('# newdoc\n')
-
-	for i in range(0, len(align_res)):
-
-		print('# newpar\n')	
-		print('# sent_id = ' + str(i+1) + '\n')
-		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
-
-		for j in range(0, len(align_res[i])):
-			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
-			if int(ud_res[i][j+1][6]) != 0:
-				ud_res[i][j+1][6] = str(align_res[i][int(ud_res[i][j+1][6])-1] + 1)
-			ud_res[i][j+1][1] = corpora_res[i][1][int(ud_res[i][j+1][0])-1]
-			if ud_res[i][j+1][2] != '.':
-				ud_res[i][j+1][2] = '_'
-
-			# discard XPOS and FEATS for now
-			ud_res[i][j+1][4] = '_' 
-			ud_res[i][j+1][5] = '_'
-			print('\t'.join(ud_res[i][j+1]) + '\n')
-		print('\n') 
-
-
-
-
-def main_test():
-	#file = open('cross_lingual_results.txt','a')
-	file = sys.stdout
-
-	align_res = align_arr(align)
-	ud_res = ud_parse(ud)
-	corpora_res = corpora_arr(corpora)
-
-	print('# newdoc\n')
-
-	for i in range(0, len(align_res)):
-
-		print('# newpar\n')	
-		print('# sent_id = ' + str(i+1) + '\n')
-		print('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
-
-		for j in range(0, len(align_res[i])):
-			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
-			if int(ud_res[i][j+1][6]) != 0:
-				ud_res[i][j+1][6] = str(align_res[i][int(ud_res[i][j+1][6])-1] + 1)
-			ud_res[i][j+1][1] = corpora_res[i][1][int(ud_res[i][j+1][0])-1]
-			if ud_res[i][j+1][2] != '.':
-				ud_res[i][j+1][2] = '_'
-
-			# discard XPOS and FEATS for now
-			ud_res[i][j+1][4] = '_' 
-			ud_res[i][j+1][5] = '_'
-			print('\t'.join(ud_res[i][j+1]) + '\n')
-		print('\n') 
-
-
+		# discard XPOS and FEATS for now
+		ud_sent[j+1][4] = '_' 
+		ud_sent[j+1][5] = '_'
+		file.write('\t'.join(ud_sent[j+1]) + '\n')
+	file.write('\n') 
 
 
 def main():
-	#file = open('cross_lingual_results.txt','a')
+	# file = open('cross_lingual_results.txt','a')
 	file = sys.stdout
 
 	align_res = align_arr(align)
-	ud_res = ud_parse(ud)
-	corpora_res = corpora_arr(corpora)
-
+	ud_res = ud_parse(ud) 
+	corpora_res = corpora_arr(corpora) 
 	file.write('# newdoc\n')
 
 	for i in range(0, len(align_res)):
-
 		file.write('# newpar\n')	
 		file.write('# sent_id = ' + str(i+1) + '\n')
 		file.write('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
 
-		for j in range(0, len(align_res[i])):
-			ud_res[i][j+1][0] = str(align_res[i][int(ud_res[i][j+1][0])-1] + 1)
-			if int(ud_res[i][j+1][6]) != 0:
-				ud_res[i][j+1][6] = str(align_res[i][int(ud_res[i][j+1][6])-1] + 1)
-			ud_res[i][j+1][1] = corpora_res[i][1][int(ud_res[i][j+1][0])-1]
-			if ud_res[i][j+1][2] != '.':
-				ud_res[i][j+1][2] = '_'
+		germ_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
 
-			# discard XPOS and FEATS for now
-			ud_res[i][j+1][4] = '_' 
-			ud_res[i][j+1][5] = '_'
-			file.write('\t'.join(ud_res[i][j+1]) + '\n')
-		file.write('\n')
-	file.close()
+		if '-' in ''.join(germ_indexes):
+			main_test(i, zum_align(align_res[i], germ_indexes), ud_res[i], corpora_res[i], file)
+		else:
+			main_test(i, align_res[i], ud_res[i], corpora_res[i], file)
 
 
-
-
-
+main()
