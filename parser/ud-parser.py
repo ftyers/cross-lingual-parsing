@@ -67,7 +67,7 @@ def zum_align(align, ud_indexes):
 
 
 # this function go thru each word in sentence
-def main_test(i, align_sent, ud_sent, corpora_sent, file):
+def transfer_tree(i, align_sent, ud_sent, corpora_sent, file):
 	for j in range(0, len(align_sent)):
 		if '-' in ud_sent[j+1][0]:
 			continue
@@ -104,9 +104,9 @@ def main(align, ud, corpora):
 		germ_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
 
 		if '-' in ''.join(germ_indexes):
-			main_test(i, zum_align(align_res[i], germ_indexes), ud_res[i], corpora_res[i], file)
+			transfer_tree(i, zum_align(align_res[i], germ_indexes), ud_res[i], corpora_res[i], file)
 		else:
-			main_test(i, align_res[i], ud_res[i], corpora_res[i], file)
+			transfer_tree(i, align_res[i], ud_res[i], corpora_res[i], file)
 
 
 main(align, ud, corpora)
