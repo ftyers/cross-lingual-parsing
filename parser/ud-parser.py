@@ -1,18 +1,10 @@
-import re
-import os
 import sys
 
-align_sents = open('fast_align_res.txt', 'r')
-align = align_sents.readlines()
 
-ud_pipe = open('ud_results.txt', 'r')
-ud = ud_pipe.readlines()
-
-parpall_corpora = open('de-ru.txt', 'r')
-corpora = parpall_corpora.readlines()
-
-sents = re.findall('sent_id.*newpar?', 'ud')
-
+# for example, python3 ud-parser.py fast_align_res.txt ud_results.txt de-ru.txt
+align = open(sys.argv[-3], 'r').readlines()
+ud = open(sys.argv[-2], 'r').readlines()
+corpora = open(sys.argv[-1], 'r').readlines()
 
 
 def corpora_arr(corpora):
@@ -74,6 +66,7 @@ def zum_align(align, ud_indexes):
 	return d
 
 
+# this function go thru each word in sentence
 def main_test(i, align_sent, ud_sent, corpora_sent, file):
 	for j in range(0, len(align_sent)):
 		if '-' in ud_sent[j+1][0]:
@@ -93,7 +86,8 @@ def main_test(i, align_sent, ud_sent, corpora_sent, file):
 	file.write('\n') 
 
 
-def main():
+# this function go thru each sentence
+def main(align, ud, corpora):
 	# file = open('cross_lingual_results.txt','a')
 	file = sys.stdout
 
@@ -115,4 +109,4 @@ def main():
 			main_test(i, align_res[i], ud_res[i], corpora_res[i], file)
 
 
-main()
+main(align, ud, corpora)
