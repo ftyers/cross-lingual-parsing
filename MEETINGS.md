@@ -48,7 +48,7 @@
 
 ## 21st February
 
-## Tasks 
+### Tasks 
 
 * Saša: Finish script, run it on the German--Yiddish data (at least 10%), do the list of Yiddish orthographical stuff
 * Paša: Finish translating, aligning and running the German translation through UDPipe and upload all data to GitHub
@@ -56,8 +56,20 @@
 
 ## 6th March
 
-## Tasks
+### Tasks
 
 * Saša: Make script work with more than one joined thing (e.g. dímelo--dí|me|lo). Run the script on the German--Yiddish data (all of it).
 * Paša: Download and install Apertium fao-nob and translate from fao→nob→(swe,dan) using Apertium
 * Kostya: Process Faroese Wikipedia, translate nob→swe,dan using Google
+
+## 11th April
+
+### Tasks
+
+* Saša: Make script work with more than one joined thing (e.g. dímelo--dí|me|lo). Run the script on the German--Yiddish data (all of it).
+* Paša: Download and install Apertium fao-nob and translate from fao→nob→(swe,dan) using Apertium, parse using UDPipe
+* Kostya: Process Faroese Wikipedia, translate nob→swe,dan using Google, parse using UDPipe
+* Maša: 
+
+
+
