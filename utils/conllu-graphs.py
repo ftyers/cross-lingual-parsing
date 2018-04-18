@@ -4,7 +4,8 @@ def get_treebank():
 	"""
 	Reads the conllu files from command line arguments.
 	Returns a list of lists with sctrings, where
-	sentences are grouped by the id of the sentence. 
+	sentences are grouped by the id of the sentence.
+	[[sent1.v1, sent1.v2, ...], [sent2.v1, sent2.v2, ...], ...]
 	"""
 	treebank = []
 	for fname in sys.argv[1:]:
@@ -77,9 +78,7 @@ if __name__ == '__main__':
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	for group in treebank:
-		print(group)
-	# analyse_sents(treebank[0])
+	analyse_sents(treebank[0])
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
