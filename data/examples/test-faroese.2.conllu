@@ -10,7 +10,6 @@
 6	landslutinum	landslutur	NOUN	N	Case=Dat|Definite=Def|Gender=Masc|Number=Sing	4	obl	_	SpaceAfter=No
 7	.	.	PUNCT	CLB	_	6	punct	_	_
 
-
 # sent_id = wikipedia.vislcg.txt:1003:20491
 # text = Í fótbólti spælir hon sum málmaður.
 # text[eng] = In football she plays as goalkeeper.
@@ -22,7 +21,6 @@
 5	sum	sum	SCONJ	CS	_	6	case	_	_
 6	málmaður	málmaður	NOUN	N	Case=Nom|Definite=Ind|Gender=Masc|Number=Sing	3	obl	_	SpaceAfter=No
 7	.	.	PUNCT	CLB	_	3	punct	_	_
-
 
 # sent_id = wikipedia.vislcg.txt:995:20339
 # text = Føroyar er limur í NEAFC.
