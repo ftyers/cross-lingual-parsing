@@ -2,17 +2,14 @@ import sys
 
 
 # for example, python3 ud-parser.py fast_align_res.txt ud_results.txt de-ru.txt
-# align = open(sys.argv[-3], 'r').readlines()
-# ud = open(sys.argv[-2], 'r').readlines()
-# corpora = open(sys.argv[-1], 'r').readlines()
+align = open(sys.argv[-3], 'r').readlines()
+ud = open(sys.argv[-2], 'r').readlines()
+corpora = open(sys.argv[-1], 'r').readlines()
 
-if len(sys.argv) < 4:
-	print('python3 project-aligned-trees.py <alignments> <conllu file> ???')
-	sys.exit(-1)
 
-align = open(sys.argv[1], 'r').readlines()
-ud = open(sys.argv[2], 'r').readlines()
-corpora = open(sys.argv[3], 'r').readlines()
+# align = open('align_res.txt', 'r').readlines()
+# ud = open('ud_res.txt', 'r').readlines()
+# corpora = open('yiddish_german_google_cleared_01.txt', 'r').readlines()
 
 
 def corpora_arr(corpora):
@@ -38,46 +35,75 @@ def ud_parse(ud):
 	sentense = []
 	new_sent = False
 	for line in ud:
+
 		if line == '\n':
+			# print('YAAAAAAAAAAAAAS IT IS')
 			new_sent = False
+			# print(sentense)
 			doc.append(sentense)
 			sentense = []
 		if new_sent == True:
+			# print("I WILL WRITE THIS LINE ", line)
 			sentense.append(line.replace('\n', '').split('	'))
 		if 'sent_id' in line:
+			# print("HERE SENT ID ", line)
 			new_sent = True
+			# print(new_sent)
 	return(doc)
+	
+
 
 
 def zum_align(align, ud_indexes):
 	d = {}
 	point = ''
 	before_zum = True
-	# print(align)
+	# print("ALIGN ", align)
 	for i in ud_indexes:
-		# print(i)
-		# print(d)
 		if i in point:
 			continue
+
+		if '-' in i:
+			# print(i)
+			before_zum = False
+			zum = i.split('-')
+
+			for j in range(int(zum[0]), int(zum[1])+1):
+				try:			
+					d[j-1] = align[j-1]
+				except KeyError:
+					d[j-1] = j-1
+				point += str(j) + ' '
+			before_zum = 0
+			continue
+
 		try:
 			if before_zum == 0:
 				# print(i)
-				d[int(i)-1] = align[int(i)-2]
-		
-			if '-' in i:
-				before_zum = False
-				zum = i.split('-')
-				for j in range(int(zum[0]), int(zum[1])+1):					
-					d[j-1] = align[j-1]	
-				before_zum = 0
-				point += i
+				d[int(i)-1] = align[int(i)-2]	
 
 			if before_zum is True:
 				d[int(i)-1] = align[int(i)-1]
+
 		except KeyError:
-			continue
+			d[int(i)-1] = int(i)-2
+		
 	# print('ALIGN RESULT ZUM', d)
 	return d
+
+
+def check_align(align, ud_indexes):
+	# print("ALIGN ", align)
+	for i in ud_indexes:
+		try:
+			align[int(i)-1]
+
+		except KeyError:
+			align[int(i)-1] = int(i)-2
+		
+	# print('check_align RESULT', align)
+	return align
+
 
 
 # this function go thru each word in sentence
@@ -91,7 +117,10 @@ def transfer_tree(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
 			ud_sent[j+1][0] = str(align_sent[int(ud_sent[j+1][0])-1] + 1)
 			if int(ud_sent[j+1][6]) != 0:
 				ud_sent[j+1][6] = str(align_sent[int(ud_sent[j+1][6])-1] + 1)
-			ud_sent[j+1][1] = corpora_sent[1][int(ud_sent[j+1][0])-1]
+			try:
+				ud_sent[j+1][1] = corpora_sent[1][int(ud_sent[j+1][0])-1]
+			except IndexError:
+				continue
 			if ud_sent[j+1][2] != '.':
 				ud_sent[j+1][2] = '_'
 
@@ -110,14 +139,12 @@ def test(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
 	for j in range(0, len(source_indexes)):
 		if '-' in ud_sent[j+1][0]:
 			continue
-		
 		try:
 			print(int(ud_sent[j+1][0])-1, align_sent[int(ud_sent[j+1][0])-1])
 		except KeyError:
 			continue
 
 		
-
 
 # this function go thru each sentence
 def main(align, ud, corpora):
@@ -133,16 +160,14 @@ def main(align, ud, corpora):
 		file.write('# newpar\n')	
 		file.write('# sent_id = ' + str(i+1) + '\n')
 		file.write('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
-
+		# print('UD RES[1]', ud_res[i])
 		source_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
-		# print(source_indexes)
-
 		if '-' in ''.join(source_indexes):
 			# print('ALIGN RESULT', align_res[i])
 			transfer_tree(i, source_indexes, zum_align(align_res[i], source_indexes), ud_res[i], corpora_res[i], file)
 		else:
 			# print('ALIGN RESULT', align_res[i])
-			transfer_tree(i, source_indexes, align_res[i], ud_res[i], corpora_res[i], file)
+			transfer_tree(i, source_indexes, check_align(align_res[i], source_indexes), ud_res[i], corpora_res[i], file)
 
 
 main(align, ud, corpora)
