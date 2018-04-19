@@ -126,7 +126,7 @@ def transfer_tree(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
 			if int(ud_sent[j+1][6]) != 0:
 				ud_sent[j+1][6] = str(align_sent[int(ud_sent[j+1][6])-1] + 1)
 			try:
-				ud_sent[j+1][1] = corpora_sent[1][int(ud_sent[j+1][0])-1]
+				ud_sent[j+1][1] = corpora_sent[0][int(ud_sent[j+1][0])-1]
 			except IndexError:
 				continue
 			if ud_sent[j+1][2] != '.':
@@ -167,7 +167,7 @@ def main(align, ud, corpora):
 	for i in range(0, len(align_res)):
 		file.write('# newpar\n')	
 		file.write('# sent_id = ' + str(i+1) + '\n')
-		file.write('# text = ' + ' '.join(corpora_res[i][1]) + '\n')
+		file.write('# text = ' + ' '.join(corpora_res[i][0]) + '\n')
 		# print('UD RES[1]', ud_res[i])
 		source_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
 		if '-' in ''.join(source_indexes):
