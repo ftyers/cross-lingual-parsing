@@ -1,10 +1,16 @@
 import sys
 
 
+# $ python3 ../../utils/project-aligned-trees.py fao_wiki.apertium.fao-dan.parsed.txt fao_wiki.apertium.fao-dan.align.txt fao_wiki.apertium.fao-dan.input.txt 
 # for example, python3 ud-parser.py fast_align_res.txt ud_results.txt de-ru.txt
-align = open(sys.argv[-3], 'r').readlines()
-ud = open(sys.argv[-2], 'r').readlines()
-corpora = open(sys.argv[-1], 'r').readlines()
+
+if len(sys.argv) < 3: 
+	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
+	sys.exit(-1)
+
+align = open(sys.argv[2], 'r').readlines()
+ud = open(sys.argv[1], 'r').readlines()
+corpora = open(sys.argv[3], 'r').readlines()
 
 
 # align = open('align_res.txt', 'r').readlines()
@@ -25,7 +31,9 @@ def align_arr(align):
 	for line in align:
 		d = {}
 		for pattern in ([word.split('-') for word in line.replace('\n', '').split()]):
-			d[int(pattern[0])] = int(pattern[1])
+			p0 = int(pattern[0])
+			p1 = int(pattern[1])
+			d[p0] = p1
 		arr.append(d)
 	return arr
 
