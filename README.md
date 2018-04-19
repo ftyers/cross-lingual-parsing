@@ -11,6 +11,14 @@
 ### Team
 
 * Kostya Vinogorodskiy kvinog54@gmail.com
-* Marina Kustova Marinakoustova@gmail.com
 * Sasha Martynova alex250396@gmail.com
 * Pasha Stepachev pavel.stepachev@yandex.ru
+* Masha Sheyanova masha.shejanova@gmail.com
+
+### Questions
+
+The work should answer the following questions:
+
+* Evaluate how much adding different parsers helps
+* Evaluate how much adding more languages helps
+* Evaluate how much cleaning helps
