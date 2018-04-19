@@ -6,10 +6,13 @@ import sys
 # ud = open(sys.argv[-2], 'r').readlines()
 # corpora = open(sys.argv[-1], 'r').readlines()
 
+if len(sys.argv) < 4:
+	print('python3 project-aligned-trees.py <alignments> <conllu file> ???')
+	sys.exit(-1)
 
-align = open('align_res.txt', 'r').readlines()
-ud = open('ud_res.txt', 'r').readlines()
-corpora = open('yiddish_german_google_cleared_01.txt', 'r').readlines()
+align = open(sys.argv[1], 'r').readlines()
+ud = open(sys.argv[2], 'r').readlines()
+corpora = open(sys.argv[3], 'r').readlines()
 
 
 def corpora_arr(corpora):
