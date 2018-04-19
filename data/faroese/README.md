@@ -1,3 +1,12 @@
+# Pipeline
+
+```
+       		 ┌─>swe(Google Translate, Yandex Translate,Apertium)
+       		 |
+fao─>nob(Apertium)─>nno(Apertium)
+       		 |
+       		 └─>dan(Google Translate,Yandex Translate,Apertium)
+```
 
 # Files
 
