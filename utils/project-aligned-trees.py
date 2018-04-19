@@ -129,8 +129,6 @@ def main(align, ud, corpora):
 	corpora_res = corpora_arr(corpora) 
 	file.write('# newdoc\n')
 
-	print(corpora_res[0], file=sys.stderr)
-
 	for i in range(0, len(align_res)):
 		file.write('# newpar\n')	
 		file.write('# sent_id = ' + str(i+1) + '\n')
