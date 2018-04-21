@@ -1,5 +1,3 @@
-import sys
-
 class Sentence:
 
 	def __init__(self, blokk):
@@ -20,17 +18,16 @@ class Sentence:
 				continue
 			if row[0].count('-') > 0:
 				id = int(row[0].split('-')[0])
-				self.spans[id] = row		
+				self.spans[id] = row
 				continue
 			self.tokens.append(row)
 
-	# when you print out the sentence, you first print out the comments, 
-	# then you iterate through the tokens
-	#    you get the id, if there is a span corresponding to that id, print the span
-	#    print the token
-	#    if there is an empty corresponding to the id, you print the empty
-
 	def __str__(self):
+		# when you print out the sentence, you first print out the comments, 
+		# then you iterate through the tokens
+		#    you get the id, if there is a span corresponding to that id, print the span
+		#    print the token
+		#    if there is an empty corresponding to the id, you print the empty
 		out = ''
 		for line in self.comments:
 			out += line
@@ -47,13 +44,15 @@ class Sentence:
 		return out
 
 
-#class MultiSentence:
-#	weights = {} # keyed on (id, head,deprel), e.g. weights[(3,0 ,'root')] = 0.445
+class MultiSentence:
+
+	def __init__(self, sentences):
+		# keyed on (id, head,deprel), e.g. weights[(3,0 ,'root')] = 0.445
+		weights = {}
 
 
-for blokk in sys.stdin.read().split('\n\n'):
-	if blokk.strip() == '': continue
-	sent = Sentence(blokk)
-	print(sent)
-
-
+if __name__ == '__main__':
+	for blokk in input().split('\n\n'):
+		if blokk.strip() == '': continue
+		sent = Sentence(blokk)
+		print(sent)
