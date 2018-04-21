@@ -11,7 +11,7 @@ class Sentence:
 			if line[0] == '#':
 				self.comments.append(line+'\n')
 				continue
-			row = line.split('\t')
+			row = tuple(line.split('\t'))
 			if row[0].count('.') > 0:
 				id = int(row[0].split('.')[0])
 				self.empties[id] = row		
@@ -47,8 +47,24 @@ class Sentence:
 class MultiSentence:
 
 	def __init__(self, sentences):
-		# keyed on (id, head,deprel), e.g. weights[(3,0 ,'root')] = 0.445
-		weights = {}
+		self.sentences = sentences
+		self.merge_sents()
+		# weights = {} # keyed on (id, head,deprel), e.g. weights[(3,0 ,'root')] = 0.445
+
+	def merge_sents(self):
+		self.merge_comments([s.comments for s in self.sentences])
+		self.count_weights()
+
+	def merge_comments(all_comm):
+		# checking that all comments are equal
+		if all_comm[1:] == all_comm[:-1]:
+			self.comments = self.sentences[0].comments
+		else:
+			# if the comments are not equal, choose the longest ones
+			self.comments = max(all_comm, key=len)
+
+	def count_weights():
+		pass
 
 
 if __name__ == '__main__':
