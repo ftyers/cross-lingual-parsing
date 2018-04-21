@@ -1,11 +1,11 @@
 import sys
+from conllu_parser import Sentence, MultiSentence
 
 def get_treebank():
 	"""
 	Reads the conllu files from command line arguments.
 	Returns a list of lists with sctrings, where
 	sentences are grouped by the id of the sentence.
-	[[sent1.v1, sent1.v2, ...], [sent2.v1, sent2.v2, ...], ...]
 	"""
 	treebank = []
 	for fname in sys.argv[1:]:
@@ -13,14 +13,15 @@ def get_treebank():
 			sents = f.read().split('\n\n')
 			treebank.append(sents) # at this point, treebank has n sub-lists for each file
 
-	# re-structuring the treebank, so that the sub-lists contain n versions for each sentence
+	# re-structuring the treebank, so that the sub-lists contain n versions for each sentence:
+	# [[sent1.v1, sent1.v2, ...], [sent2.v1, sent2.v2, ...], ...]
 	treebank = [[li[i] for li in treebank] for i in range(len(treebank[0]))]
 	return treebank
 
 
 
-def analyse_sents():
-	pass
+def analyse_sents(sents):
+	weighted = get_weights(sents)
 
 
 def get_weights(sents):
