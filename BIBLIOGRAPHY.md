@@ -11,6 +11,7 @@ Summary: https://drive.google.com/open?id=1_bHQ-ciMtTlhcMafJ7YET8n4plrNtXjQ
 * Héctor Martínez Alonso, Željko Agić, Barbara Plank and Anders Søgaard (2017) "Parsing Universal Dependencies without training". Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 1, Long Papers https://aclanthology.info/pdf/E/E17/E17-1022.pdf
 * Mathieu Dehouck, Pascal Denis (2017) "Delexicalized Word Embeddings for Cross-lingual Dependency Parsing". Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 1, Long Papers http://www.aclweb.org/anthology/E17-1023
 *  Long Duong and Trevor Cohn and Steven Bird and Paul Cook (2015) "A neural network model for low-resource universal dependency parsing" .  Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing, p339-348, Lisbon, Portugal http://aclweb.org/anthology/D15-1040
+* Rudolf Rosa and Zdenek Zabokrtsky (2015). KLcpos3 - a Language Similarity Measure for Delexicalized Parser Transfer.  In Proceedings of ACL, pp. 243–249  http://www.aclweb.org/anthology/P15-2040
 
 # Embeddings
 

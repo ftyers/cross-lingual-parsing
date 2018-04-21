@@ -12,7 +12,7 @@ for i in abbrs_in:
 def tokenise(line, abbrs_to, abbrs_from):
 	out = line
 	for abbr in abbrs_to:
-		out = out.replace(abbr, ' ' + abbrs_to[abbr] + ' ')
+		out = out.replace(' ' + abbr, ' ' + abbrs_to[abbr] + ' ')
 
 	for p in '!:,?;.()"“”':
 		out = out.replace(p, ' ' + p + ' ')
