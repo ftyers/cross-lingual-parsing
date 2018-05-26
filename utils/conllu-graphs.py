@@ -11,21 +11,14 @@ def get_treebank():
 	for fname in sys.argv[1:]:
 		with open(fname) as f:
 			sents = f.read().split('\n\n')
-			treebank.append(sents) # at this point, treebank has n sub-lists for each file
+
+			# at this point, treebank has n sub-lists for each file
+			treebank.append([Sentence(s) for s in sents])
 
 	# re-structuring the treebank, so that the sub-lists contain n versions for each sentence:
 	# [[sent1.v1, sent1.v2, ...], [sent2.v1, sent2.v2, ...], ...]
 	treebank = [[li[i] for li in treebank] for i in range(len(treebank[0]))]
 	return treebank
-
-
-
-def analyse_sents(sents):
-	weighted = get_weights(sents)
-
-
-def get_weights(sents):
-	pass
 
 
 def get_spanning_tree(G, W):
@@ -79,7 +72,11 @@ if __name__ == '__main__':
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	analyse_sents(treebank[0])
+	print(treebank[0])
+	for token in treebank[0][0].tokens:
+		print(token)
+	# analyse_sents(treebank[0])
+	ms = MultiSentence(treebank[0])
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
