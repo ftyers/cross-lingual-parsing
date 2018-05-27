@@ -71,7 +71,7 @@ class MultiSentence:
 		graph = ''
 		for edge in self.graph.edges:
 			graph += str(edge) + '\n'
-		return graph
+		return graph.strip()
 
 
 class DifferentLength(Exception):
@@ -113,12 +113,12 @@ class FullGraph:
 				cur_edge = self.edges.get((fr, to), Edge(fr, to, deprel))
 				cur_edge.weight += 1
 				self.edges[(fr, to)] = cur_edge
-		for token in self.nodes:
-			print(token)
-		print('--*--')
-		for e in self.edges:
-			print(e)
 
+		# fill the in_edges lists fir each node
+		for node in self.nodes:
+			for fr, to in self.edges:
+				if to == node.id:
+					node.in_edges.append(self.edges[(fr, to)])
 
 
 class Node:
@@ -130,7 +130,7 @@ class Node:
 	"""
 	def __init__(self, features):
 		self.features = features
-		self.id = features[0]
+		self.id = int(features[0])
 		self.in_edges = []
 
 	def __repr__(self):
@@ -144,13 +144,15 @@ class Edge:
 	weight -- the number of times an edge occured in the data
 	"""
 	def __init__(self, source, destination, deprel):
-		self.source = source
-		self.dest = destination
+		self.fr = source
+		self.to = destination
 		self.weight = 0
 		self.deprels = [deprel]
 
 	def __repr__(self):
-		return '\t'.join([self.source, self.dest, self.weight, self.deprels])
+		return '\t'.join([str(f) for f in 
+			[self.fr, self.to, self.weight, self.deprels]
+			])
 		
 
 if __name__ == '__main__':

@@ -77,6 +77,7 @@ if __name__ == '__main__':
 		print(token)
 	# analyse_sents(treebank[0])
 	ms = MultiSentence(treebank[0])
+	print(ms)
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
