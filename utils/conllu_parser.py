@@ -153,7 +153,7 @@ class Edge:
 		return '\t'.join([str(f) for f in 
 			[self.fr, self.to, self.weight, self.deprels]
 			])
-		
+				
 
 if __name__ == '__main__':
 	for blokk in input().split('\n\n'):

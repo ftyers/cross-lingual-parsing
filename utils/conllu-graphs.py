@@ -1,6 +1,16 @@
 import sys
 from conllu_parser import Sentence, MultiSentence
 
+
+class CurrentGraph:
+
+	def __init__(self, full_graph):
+		self.nodes = full_graph.nodes
+		self.edges = []
+		# for node in self.nodes:
+
+
+
 def get_treebank():
 	"""
 	Reads the conllu files from command line arguments.
@@ -12,13 +22,16 @@ def get_treebank():
 		with open(fname) as f:
 			sents = f.read().split('\n\n')
 
-			# at this point, treebank has n sub-lists for each file
+			# at this point, treebank has n sub-lists for each file,
+			# where n is a number of treebank versions
 			treebank.append([Sentence(s) for s in sents])
 
-	# re-structuring the treebank, so that the sub-lists contain n versions for each sentence:
-	# [[sent1.v1, sent1.v2, ...], [sent2.v1, sent2.v2, ...], ...]
-	treebank = [[li[i] for li in treebank] for i in range(len(treebank[0]))]
-	return treebank
+	# re-structuring the treebank, froming a list of MultiSentence instances:
+	# each multisentence is a compillation of n sentence versions
+	multisentences = []
+	for i in range(len(treebank[0])):
+		multisentences.append(MultiSentence([li[i] for li in treebank]))
+	return multisentences
 
 
 def get_spanning_tree(G, W):
@@ -73,11 +86,11 @@ if __name__ == '__main__':
 		quit()
 	treebank = get_treebank()
 	print(treebank[0])
-	for token in treebank[0][0].tokens:
+	for token in treebank[0].sentences[0].tokens:
 		print(token)
 	# analyse_sents(treebank[0])
-	ms = MultiSentence(treebank[0])
-	print(ms)
+	# ms = MultiSentence(treebank[0])
+	# print(ms)
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
