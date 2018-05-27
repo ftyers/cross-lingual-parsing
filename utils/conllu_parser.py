@@ -70,7 +70,7 @@ class MultiSentence:
 	def __repr__(self):
 		graph = ''
 		for edge in self.graph.edges:
-			graph += str(edge) + '\n'
+			graph += str(self.graph.edges[edge]) + '\n'
 		return graph.strip()
 
 
@@ -150,9 +150,8 @@ class Edge:
 		self.deprels = [deprel]
 
 	def __repr__(self):
-		return '\t'.join([str(f) for f in 
-			[self.fr, self.to, self.weight, self.deprels]
-			])
+		return 'from ' + str(self.fr) + ', to ' + str(self.to) + ', weight '\
+		       + str(self.weight) + ', labels ' + str(self.deprels)
 
 
 if __name__ == '__main__':

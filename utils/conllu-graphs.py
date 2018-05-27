@@ -10,14 +10,14 @@ class CurrentGraph:
 
 		# for each node, chosing the 
 		for node in self.nodes:
-			best_edge = max(nodes.in_edges, key=lamba x: x.weight)
+			best_edge = max(node.in_edges, key=lambda x: x.weight)
 			self.edges.append(best_edge)
 
-		def __repr__(self):
-			res = ''
-			for e in self.edges:
-				res += str(e) + '\n'
-			return res.strip()
+	def __repr__(self):
+		res = ''
+		for e in self.edges:
+			res += str(e) + '\n'
+		return res.strip()
 
 
 
@@ -98,6 +98,9 @@ if __name__ == '__main__':
 	print(treebank[0])
 	for token in treebank[0].sentences[0].tokens:
 		print(token)
+	print()
+	cur_g = CurrentGraph(treebank[0].graph)
+	print(str(cur_g))
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
