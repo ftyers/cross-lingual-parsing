@@ -1,5 +1,5 @@
 import sys
-from conllu_parser import Sentence, MultiSentence
+from conllu_parser import Sentence, MultiSentence, DifferentLength
 
 
 class CurrentGraph:
@@ -7,11 +7,21 @@ class CurrentGraph:
 	def __init__(self, full_graph):
 		self.nodes = full_graph.nodes
 		self.edges = []
+		self.choose_edges()
+		self.make_children()
 
-		# for each node, chosing the 
+	def choose_edges(self):
+		# for each node, chosing the incoming edge eith the highest weight
 		for node in self.nodes:
 			best_edge = max(node.in_edges, key=lambda x: x.weight)
 			self.edges.append(best_edge)
+
+	def make_children(self): ## TODO wrong indices error handling
+		for edge in self.edges:
+			if edge.fr != 0:
+				cur_token = self.nodes[edge.fr - 1]
+				child_token = self.nodes[edge.to - 1]
+				cur_token.children.append(child_token)
 
 	def __repr__(self):
 		res = ''
@@ -39,8 +49,17 @@ def get_treebank():
 	# re-structuring the treebank, froming a list of MultiSentence instances:
 	# each multisentence is a compillation of n sentence versions
 	multisentences = []
+	diff_len = 0
 	for i in range(len(treebank[0])):
-		multisentences.append(MultiSentence([li[i] for li in treebank]))
+		try:
+			multisentences.append(MultiSentence([li[i] for li in treebank]))
+		except DifferentLength:
+			diff_len += 1
+			print(treebank[0][i])
+			print()
+			print(treebank[1][i])
+			quit()
+	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
 	return multisentences
 
 

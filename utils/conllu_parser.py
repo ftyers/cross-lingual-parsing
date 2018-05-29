@@ -132,6 +132,7 @@ class Node:
 		self.features = features
 		self.id = int(features[0])
 		self.in_edges = []
+		self.children = [] # is filled only in CurrentGraph, untouched in FullGraph
 
 	def __repr__(self):
 		return '\t'.join(self.features)
