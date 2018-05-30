@@ -84,6 +84,11 @@ class ZeroLength(Exception):
 		return "There is no sentences."
 
 
+class ConllIndexError(Exception):
+	def __repr__(self):
+		return "There expected index doesn't match the resulting index."
+
+
 class FullGraph:
 	"""a graph representation for merged sentences"""
 	def __init__(self, sentences):

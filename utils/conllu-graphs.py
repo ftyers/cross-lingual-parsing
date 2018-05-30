@@ -1,5 +1,5 @@
 import sys
-from conllu_parser import Sentence, MultiSentence, DifferentLength
+from conllu_parser import *
 
 
 class CurrentGraph:
@@ -21,6 +21,8 @@ class CurrentGraph:
 			if edge.fr != 0:
 				cur_token = self.nodes[edge.fr - 1]
 				child_token = self.nodes[edge.to - 1]
+				if cur_token.id != edge.fr or child_token.id != edge.to:
+					raise ConllIndexError
 				cur_token.children.append(child_token)
 
 	def __repr__(self):
@@ -29,6 +31,10 @@ class CurrentGraph:
 			res += str(e) + '\n'
 		return res.strip()
 
+
+def my_cycle_detection(graph):
+	cycles = []
+	return cycles
 
 
 def get_treebank():
