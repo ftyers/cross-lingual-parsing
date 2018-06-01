@@ -34,7 +34,22 @@ class CurrentGraph:
 
 def my_cycle_detection(graph):
 	cycles = []
+	white, gray, black = set(self.nodes), set(), set()
+	while white:
+		mapping = {}
+		node = white.pop()
+		gray.add(node)
+		mapping[node] = None
+		cycle, white, gray, black = my_dfs(node, white, gray, black)
 	return cycles
+
+
+def my_dfs(node, white, gray, black):
+	for child in node.children:
+		if child in black:
+			continue
+		if child in gray:
+			print('cycle found')
 
 
 def get_treebank():
