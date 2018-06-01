@@ -4,7 +4,7 @@ import sys
 
 # the path to your UDPipe binary
 UDPIPE_PATH = '~/Documents/udpipe-1.2.0-bin/bin-linux64/udpipe'
-PATH_TO_GS = ''
+
 
 def make_tmp_dirs():
     dirnames = ['models', 'predicted']
@@ -13,21 +13,27 @@ def make_tmp_dirs():
             os.mkdir(dirname)
 
 
-def train():
-    i = 0
-    if not os.path.exists('models/model_' + str(i) + '.udpipe'):
-        os.system('../udpipe-1.0.0-bin/bin-linux32/udpipe --tokenizer=\'epochs=10\' --train models/model_'
-                  + str(i) + '.udpipe train/' + str(i) + '_training.conllu')
-        print('\n===\nThe model ' + str(i) + ' is trained\n===\n')
+def train(corp_name, model_name):
+    if not os.path.exists('models/{}'.format(model_name)):
+        os.system(UDPIPE_PATH + ' --train models/{model} {corp}'\
+            .format(model=model_name, corp=corp_name))
+        print('===\nThe model {} is trained\n==='.format(model_name))
     else:
-        print('Model ' + str(i) + ' pretrained')
-
+        print('Model {} already exists'.format(model_name))
 
 
 def main():
+    if len(sys.argv) != 2:
+        print("""
+            Usage: \npython3 train_model.py [corpus] [output_model_name]
+            corpus -- the path to the corpus you train the model on
+            output_model_name -- hoe do you want to call the resulting model
+            Example:\npython3 train_model.py rus.conllu rus.udpipe
+            """)
+    corp_name, model_name = sys.argv[:2]
     make_tmp_dirs()
-    train()
-    print('The model is trained')
+    train(corp_name, model_name)
+    print('The model is trained!')
 
 
 if __name__ == '__main__':
