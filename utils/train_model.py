@@ -17,23 +17,21 @@ def train(corp_name, model_name):
     if not os.path.exists('models/{}'.format(model_name)):
         os.system(UDPIPE_PATH + ' --train models/{model} {corp}'\
             .format(model=model_name, corp=corp_name))
-        print('===\nThe model {} is trained\n==='.format(model_name))
     else:
         print('Model {} already exists'.format(model_name))
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("""
-            Usage: \npython3 train_model.py [corpus] [output_model_name]
-            corpus -- the path to the corpus you train the model on
-            output_model_name -- hoe do you want to call the resulting model
-            Example:\npython3 train_model.py rus.conllu rus.udpipe
+    if len(sys.argv) != 3:
+        print("""Usage: \npython3 train_model.py [corpus] [output_model_name]
+    corpus -- the path to the corpus you train the model on
+    output_model_name -- hoe do you want to call the resulting model
+Example:\n    python3 train_model.py rus.conllu rus.udpipe
             """)
-    corp_name, model_name = sys.argv[:2]
+        quit()
+    corp_name, model_name = sys.argv[1:3]
     make_tmp_dirs()
     train(corp_name, model_name)
-    print('The model is trained!')
 
 
 if __name__ == '__main__':
