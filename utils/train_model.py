@@ -48,8 +48,11 @@ def prepare_test_data(model_name):
 
 def predict(model_name):
     prepare_test_data(model_name)
-    # if os.path.exists('models/{}'.format(model_name)):
-    #     os.system('')
+    if os.path.exists('models/{}'.format(model_name)):
+        os.system(
+            UDPIPE_PATH + ' --parse models/{0} test_{0}.conllu > result_{0}'\
+            .format(model_name)
+            )
 
 
 def cleanup(model_name):
@@ -71,7 +74,7 @@ Example:\n    python3 train_model.py rus.conllu rus.udpipe
     if DELEXICALIZE:
         delexicalize(corp_name, model_name)
         corp_name = 'delexicalised.conllu'
-    # train(corp_name, model_name)
+    train(corp_name, model_name)
     predict(model_name)
     cleanup(model_name)
 
