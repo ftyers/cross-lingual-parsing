@@ -8,8 +8,8 @@ if len(sys.argv) < 3:
 	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
 	sys.exit(-1)
 
-align = open(sys.argv[2], 'r').readlines()
-ud = open(sys.argv[1], 'r').readlines()
+align = open(sys.argv[1], 'r').readlines()
+ud = open(sys.argv[2], 'r').readlines()
 corpora = open(sys.argv[3], 'r').readlines()
 
 
@@ -30,7 +30,9 @@ def align_arr(align):
 	arr = []
 	for line in align:
 		d = {}
+		# print(line)
 		for pattern in ([word.split('-') for word in line.replace('\n', '').split()]):
+			# print(pattern)
 			p0 = int(pattern[0])
 			p1 = int(pattern[1])
 			d[p0] = p1
@@ -142,15 +144,15 @@ def transfer_tree(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
 	file.write('\n') 
 
 
-def test(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
-	print(align_sent)
-	for j in range(0, len(source_indexes)):
-		if '-' in ud_sent[j+1][0]:
-			continue
-		try:
-			print(int(ud_sent[j+1][0])-1, align_sent[int(ud_sent[j+1][0])-1])
-		except KeyError:
-			continue
+# def test(i, source_indexes, align_sent, ud_sent, corpora_sent, file):
+# 	print(align_sent)
+# 	for j in range(0, len(source_indexes)):
+# 		if '-' in ud_sent[j+1][0]:
+# 			continue
+# 		try:
+# 			print(int(ud_sent[j+1][0])-1, align_sent[int(ud_sent[j+1][0])-1])
+# 		except KeyError:
+# 			continue
 
 		
 
