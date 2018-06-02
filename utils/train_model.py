@@ -15,7 +15,7 @@ def make_tmp_dirs():
 
 def train(corp_name, model_name):
     if not os.path.exists('models/{}'.format(model_name)):
-        os.system(UDPIPE_PATH + ' --train models/{model} {corp}'\
+        os.system(UDPIPE_PATH + ' --train --tokenizer=none models/{model} {corp}'\
             .format(model=model_name, corp=corp_name))
     else:
         print('Model {} already exists'.format(model_name))
