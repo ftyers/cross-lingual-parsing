@@ -8,7 +8,7 @@ FAR_TEST = '~/Documents/UD_Faroese-OFT/fo_oft-ud-test.conllu' # the path to faro
 
 
 def make_tmp_dirs():
-    dirnames = ['models', 'predicted']
+    dirnames = ['models', 'predicted', 'results']
     for dirname in dirnames:
         if not os.path.exists(dirname):
             os.mkdir(dirname)
@@ -50,9 +50,17 @@ def predict(model_name):
     prepare_test_data(model_name)
     if os.path.exists('models/{}'.format(model_name)):
         os.system(
-            UDPIPE_PATH + ' --parse models/{0} test_{0}.conllu > result_{0}'\
+            UDPIPE_PATH \
+            + ' --tag --parse models/{0} test_{0}.conllu > predicted/{0}.conllu'\
             .format(model_name)
             )
+
+
+def evaluate(model_name):
+    os.system(
+        'python3 conll18_ud_eval.py --verbose {gs} predicted/{mod}.conllu > results/{mod}.md'\
+        .format(gs=FAR_TEST, mod=model_name)
+        )
 
 
 def cleanup(model_name):
@@ -76,6 +84,7 @@ Example:\n    python3 train_model.py rus.conllu rus.udpipe
         corp_name = 'delexicalised.conllu'
     train(corp_name, model_name)
     predict(model_name)
+    evaluate(model_name)
     cleanup(model_name)
 
 
