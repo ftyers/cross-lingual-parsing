@@ -34,22 +34,34 @@ class CurrentGraph:
 
 def my_cycle_detection(graph):
 	cycles = []
-	white, gray, black = set(self.nodes), set(), set()
+	white, gray, black = set(graph.nodes), set(), set()
 	while white:
 		mapping = {}
-		node = white.pop()
+		node = list(white)[0]
 		gray.add(node)
 		mapping[node] = None
-		cycle, white, gray, black = my_dfs(node, white, gray, black)
+		isCyclic, white, gray, black, mapping = my_dfs(node, white, gray, black, mapping)
 	return cycles
 
 
-def my_dfs(node, white, gray, black):
+def my_dfs(node, white, gray, black, mapping):
+	move_vertex(node, white, gray)
 	for child in node.children:
 		if child in black:
 			continue
 		if child in gray:
-			print('cycle found')
+			print('cycle found:')
+			print(child)
+			return True, white, gray, black, mapping
+		if my_dfs(child, white, gray, black, mapping)[0] == True:
+			return True, white, gray, black, mapping
+	move_vertex(node, gray, black)
+	return False, white, gray, black, mapping
+
+
+def move_vertex(vertex, source_set, destination_set):
+    source_set.remove(vertex)
+    destination_set.add(vertex)
 
 
 def get_treebank():
@@ -135,12 +147,11 @@ if __name__ == '__main__':
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	print(treebank[0])
-	for token in treebank[0].sentences[0].tokens:
-		print(token)
-	print()
+	# print(treebank[0])
+	print(treebank[0].sentences[0])
 	cur_g = CurrentGraph(treebank[0].graph)
-	print(str(cur_g))
+	print(cur_g)
+	my_cycle_detection(cur_g)
 
 	# for i, sent in enumerate(treebank):
 	# 	treebank[i] = analyse_sents(sent)
