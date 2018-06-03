@@ -39,24 +39,27 @@ def my_cycle_detection(graph):
 		mapping = {}
 		node = list(white)[0]
 		gray.add(node)
-		mapping[node] = None
-		isCyclic, white, gray, black, mapping = my_dfs(node, white, gray, black, mapping)
+		isCyclic = my_dfs(node, None, white, gray, black, mapping)
+		if isCyclic:
+			print(mapping)
 	return cycles
 
 
-def my_dfs(node, white, gray, black, mapping):
+def my_dfs(node, parent, white, gray, black, mapping):
 	move_vertex(node, white, gray)
+	mapping[node] = parent
 	for child in node.children:
 		if child in black:
 			continue
 		if child in gray:
 			print('cycle found:')
-			print(child)
-			return True, white, gray, black, mapping
-		if my_dfs(child, white, gray, black, mapping)[0] == True:
-			return True, white, gray, black, mapping
+			print(child.id)
+			mapping[child] = node
+			return True
+		if my_dfs(child, node, white, gray, black, mapping) == True:
+			return True
 	move_vertex(node, gray, black)
-	return False, white, gray, black, mapping
+	return False, mapping
 
 
 def move_vertex(vertex, source_set, destination_set):
