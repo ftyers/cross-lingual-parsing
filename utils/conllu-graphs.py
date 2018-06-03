@@ -32,20 +32,22 @@ class CurrentGraph:
 		return res.strip()
 
 
-def my_cycle_detection(graph):
+def cycle_detection(graph):
 	cycles = []
 	white, gray, black = set(graph.nodes), set(), set()
 	while white:
 		mapping = {}
 		node = list(white)[0]
 		gray.add(node)
-		isCyclic = my_dfs(node, None, white, gray, black, mapping)
+		isCyclic = dfs(node, None, white, gray, black, mapping)
 		if isCyclic:
 			print(mapping)
-	return cycles
+			return True
+	# return cycles
+	return False
 
 
-def my_dfs(node, parent, white, gray, black, mapping):
+def dfs(node, parent, white, gray, black, mapping):
 	move_vertex(node, white, gray)
 	mapping[node] = parent
 	for child in node.children:
@@ -56,7 +58,7 @@ def my_dfs(node, parent, white, gray, black, mapping):
 			print(child.id)
 			mapping[child] = node
 			return True
-		if my_dfs(child, node, white, gray, black, mapping) == True:
+		if dfs(child, node, white, gray, black, mapping):
 			return True
 	move_vertex(node, gray, black)
 	return False
@@ -133,8 +135,16 @@ if __name__ == '__main__':
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	# print(treebank[0])
 	print(treebank[0].sentences[0])
-	cur_g = CurrentGraph(treebank[0].graph)
-	print(cur_g)
-	my_cycle_detection(cur_g)
+	# cur_g = CurrentGraph(treebank[0].graph)
+	# print(cur_g)
+	# cycle_detection(cur_g)
+	for i, ms in enumerate(treebank):
+		try:
+			cur_g = CurrentGraph(ms.graph)
+			if cycle_detection(cur_g):
+				print('cyclic:')
+				print(ms.sentences[0])
+				print()
+		except (ConllIndexError, IndexError) as e:
+			print('Sentence {}: a problem with ids.'.format(i))
