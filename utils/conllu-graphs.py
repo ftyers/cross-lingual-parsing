@@ -59,7 +59,7 @@ def my_dfs(node, parent, white, gray, black, mapping):
 		if my_dfs(child, node, white, gray, black, mapping) == True:
 			return True
 	move_vertex(node, gray, black)
-	return False, mapping
+	return False
 
 
 def move_vertex(vertex, source_set, destination_set):
