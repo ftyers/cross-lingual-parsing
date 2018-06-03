@@ -2,7 +2,7 @@ import random
 import os
 import sys
 
-DELEXICALIZE = True # should be true with original language treebanks, False with projections 
+DELEXICALIZE = False # should be true with original language treebanks, False with projections 
 UDPIPE_PATH = '~/Documents/udpipe-1.2.0-bin/bin-linux64/udpipe' # the path to your UDPipe binary
 FAR_TEST = '~/Documents/UD_Faroese-OFT/fo_oft-ud-test.conllu' # the path to faroese test treebank
 
@@ -16,8 +16,9 @@ def make_tmp_dirs():
 
 def train(corp_name, model_name):
     if not os.path.exists('models/{}'.format(model_name)):
-        os.system(UDPIPE_PATH + ' --train --tokenizer=none models/{model} {corp}'\
-            .format(model=model_name, corp=corp_name))
+        print('training {mod} on {corp}...'.format(mod=model_name, corp=corp_name))
+        os.system(UDPIPE_PATH + ' --train --tokenizer=none models/{mod} {corp}'\
+            .format(mod=model_name, corp=corp_name))
     else:
         print('Model {} already exists'.format(model_name))
 
