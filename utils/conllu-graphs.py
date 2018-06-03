@@ -33,18 +33,42 @@ class CurrentGraph:
 
 
 def cycle_detection(graph):
+	"""
+	Takes an instances of CurrentGraph. Returns a list with cycles,
+	if there are any.
+	"""
 	cycles = []
 	white, gray, black = set(graph.nodes), set(), set()
 	while white:
 		mapping = {}
 		node = list(white)[0]
 		gray.add(node)
-		isCyclic = dfs(node, None, white, gray, black, mapping)
+		isCyclic, cyclic_node = dfs(node, None, white, gray, black, mapping)
 		if isCyclic:
-			print(mapping)
-			return True
-	# return cycles
-	return False
+			cycle = get_the_cycle(mapping, cyclic_node)
+			cycles.append(cycle)
+	return cycles
+
+
+def get_the_cycle(mapping, cyclic_node):
+	"""
+	Takes the nodes child/parent and the node which is guaranteed
+	to be a part of cycle. Returns a list with all the nodes in cycle.
+	"""
+	cycle = [cyclic_node]
+	cur = mapping[cyclic_node]
+	i = 0
+	while cur != cycle[0]:
+		cycle.append(cur)
+		cur = mapping[cur]
+
+		# just in case something breaks and goes wrong, to avoid eternal loops 
+		i += 1
+		if i == 50:
+			print('WAS NOT ABLE TO RETRIEVE A CYCLE')
+			break
+
+	return cycle
 
 
 def dfs(node, parent, white, gray, black, mapping):
@@ -54,14 +78,13 @@ def dfs(node, parent, white, gray, black, mapping):
 		if child in black:
 			continue
 		if child in gray:
-			print('cycle found:')
-			print(child.id)
 			mapping[child] = node
-			return True
-		if dfs(child, node, white, gray, black, mapping):
-			return True
+			return True, child
+		isCyclic, cyclic_node = dfs(child, node, white, gray, black, mapping)
+		if isCyclic:
+			return True, cyclic_node
 	move_vertex(node, gray, black)
-	return False
+	return False, None
 
 
 def move_vertex(vertex, source_set, destination_set):
@@ -136,15 +159,15 @@ if __name__ == '__main__':
 		quit()
 	treebank = get_treebank()
 	print(treebank[0].sentences[0])
-	# cur_g = CurrentGraph(treebank[0].graph)
-	# print(cur_g)
-	# cycle_detection(cur_g)
-	for i, ms in enumerate(treebank):
-		try:
-			cur_g = CurrentGraph(ms.graph)
-			if cycle_detection(cur_g):
-				print('cyclic:')
-				print(ms.sentences[0])
-				print()
-		except (ConllIndexError, IndexError) as e:
-			print('Sentence {}: a problem with ids.'.format(i))
+	cur_g = CurrentGraph(treebank[0].graph)
+	print(cur_g)
+	cycle_detection(cur_g)
+	# for i, ms in enumerate(treebank):
+	# 	try:
+	# 		cur_g = CurrentGraph(ms.graph)
+	# 		if cycle_detection(cur_g):
+	# 			print('cyclic:')
+	# 			print(ms.sentences[0])
+	# 			print()
+	# 	except (ConllIndexError, IndexError) as e:
+	# 		print('Sentence {}: a problem with ids.'.format(i))
