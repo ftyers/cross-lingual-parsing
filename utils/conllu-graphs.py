@@ -124,23 +124,6 @@ def get_spanning_tree(G, W):
 	return MST
 
 
-def dfs(graph, start, end):
-	fringe = [(start, [])]
-	while fringe:
-		state, path = fringe.pop()
-		if path and state == end:
-			yield path
-			continue
-		for next_state in graph[state]:
-			if next_state in path:
-				continue
-			fringe.append((next_state, path+[next_state]))
-
-
-def enumerate_cycles(spanning_tree):
-	return [[node]+path for node in spanning_tree for path in dfs(spanning_tree, node, node)]
-
-
 def mst():
 	pass
 
@@ -155,8 +138,3 @@ if __name__ == '__main__':
 	cur_g = CurrentGraph(treebank[0].graph)
 	print(cur_g)
 	my_cycle_detection(cur_g)
-
-	# for i, sent in enumerate(treebank):
-	# 	treebank[i] = analyse_sents(sent)
-	# with open('output.conllu') as f:
-	# 	f.write('\n\n'.join(treebank))
