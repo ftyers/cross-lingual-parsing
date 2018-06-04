@@ -16,11 +16,11 @@ def validate(treebank):
 		ids = [int(t[0]) for t in s.tokens]
 		if len(set(ids)) != len(ids):
 			doubled.append(s)
-			print('doubled:\n')
-			print(s)
+			# print('doubled:\n')
+			# print(s)
 		elif len(ids) < ids[-1]:
-			print('missing:\n')
-			print(s)
+			# print('missing:\n')
+			# print(s)
 			missing.append(s)
 		else:
 			valid.append(s)
@@ -38,7 +38,7 @@ def main():
 	# print(treebank)
 	if not os.path.exists('validated'):
 		os.mkdir('validated')
-	with open('validated/' + sys.argv[1], 'w') as f:
+	with open('validated/' + sys.argv[1].split('/')[-1], 'w') as f:
 		f.write('\n\n'.join(treebank))
 
 
