@@ -39,7 +39,7 @@ def main():
 	if not os.path.exists('validated'):
 		os.mkdir('validated')
 	with open('validated/' + sys.argv[1].split('/')[-1], 'w') as f:
-		f.write('\n\n'.join(treebank))
+		f.write('\n\n'.join(str(s) for s in treebank))
 
 
 if __name__ == '__main__':
