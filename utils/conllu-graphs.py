@@ -32,24 +32,64 @@ class CurrentGraph:
 		return res.strip()
 
 
-def my_cycle_detection(graph):
+def cycle_detection(graph):
+	"""
+	Takes an instances of CurrentGraph. Returns a list with cycles,
+	if there are any.
+	"""
 	cycles = []
-	white, gray, black = set(self.nodes), set(), set()
+	white, gray, black = set(graph.nodes), set(), set()
 	while white:
 		mapping = {}
-		node = white.pop()
+		node = list(white)[0]
 		gray.add(node)
-		mapping[node] = None
-		cycle, white, gray, black = my_dfs(node, white, gray, black)
+		isCyclic, cyclic_node = dfs(node, None, white, gray, black, mapping)
+		if isCyclic:
+			cycle = get_the_cycle(mapping, cyclic_node)
+			cycles.append(cycle)
 	return cycles
 
 
-def my_dfs(node, white, gray, black):
+def get_the_cycle(mapping, cyclic_node):
+	"""
+	Takes the nodes child/parent and the node which is guaranteed
+	to be a part of cycle. Returns a list with all the nodes in cycle.
+	"""
+	cycle = [cyclic_node]
+	cur = mapping[cyclic_node]
+	i = 0
+	while cur != cycle[0]:
+		cycle.append(cur)
+		cur = mapping[cur]
+
+		# just in case something breaks and goes wrong, to avoid eternal loops 
+		i += 1
+		if i == 50:
+			print('WAS NOT ABLE TO RETRIEVE A CYCLE')
+			break
+
+	return cycle
+
+
+def dfs(node, parent, white, gray, black, mapping):
+	move_vertex(node, white, gray)
+	mapping[node] = parent
 	for child in node.children:
 		if child in black:
 			continue
 		if child in gray:
-			print('cycle found')
+			mapping[child] = node
+			return True, child
+		isCyclic, cyclic_node = dfs(child, node, white, gray, black, mapping)
+		if isCyclic:
+			return True, cyclic_node
+	move_vertex(node, gray, black)
+	return False, None
+
+
+def move_vertex(vertex, source_set, destination_set):
+    source_set.remove(vertex)
+    destination_set.add(vertex)
 
 
 def get_treebank():
@@ -109,23 +149,6 @@ def get_spanning_tree(G, W):
 	return MST
 
 
-def dfs(graph, start, end):
-	fringe = [(start, [])]
-	while fringe:
-		state, path = fringe.pop()
-		if path and state == end:
-			yield path
-			continue
-		for next_state in graph[state]:
-			if next_state in path:
-				continue
-			fringe.append((next_state, path+[next_state]))
-
-
-def enumerate_cycles(spanning_tree):
-	return [[node]+path for node in spanning_tree for path in dfs(spanning_tree, node, node)]
-
-
 def mst():
 	pass
 
@@ -135,14 +158,16 @@ if __name__ == '__main__':
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	print(treebank[0])
-	for token in treebank[0].sentences[0].tokens:
-		print(token)
-	print()
+	print(treebank[0].sentences[0])
 	cur_g = CurrentGraph(treebank[0].graph)
-	print(str(cur_g))
-
-	# for i, sent in enumerate(treebank):
-	# 	treebank[i] = analyse_sents(sent)
-	# with open('output.conllu') as f:
-	# 	f.write('\n\n'.join(treebank))
+	print(cur_g)
+	cycle_detection(cur_g)
+	# for i, ms in enumerate(treebank):
+	# 	try:
+	# 		cur_g = CurrentGraph(ms.graph)
+	# 		if cycle_detection(cur_g):
+	# 			print('cyclic:')
+	# 			print(ms.sentences[0])
+	# 			print()
+	# 	except (ConllIndexError, IndexError) as e:
+	# 		print('Sentence {}: a problem with ids.'.format(i))

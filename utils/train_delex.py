@@ -13,13 +13,34 @@ def make_tmp_dirs():
             os.mkdir(dirname)
 
 
-def train(corp_name, model_name):
+def train_tagger(corp_name, model_name):
     if not os.path.exists('models/{}'.format(model_name)):
         print('training {mod} on {corp}...'.format(mod=model_name, corp=corp_name))
-        os.system(UDPIPE_PATH + ' --train --tokenizer=none models/{mod} {corp}'\
+        os.system(UDPIPE_PATH + ' --train --tokenizer=none --parser=none models/tagger_{mod} {corp}'\
             .format(mod=model_name, corp=corp_name))
     else:
         print('Model {} already exists'.format(model_name))
+
+
+def train_parser(corp_name, model_name):
+    if not os.path.exists('models/{}'.format(model_name)):
+        print('training {mod} on {corp}...'.format(mod=model_name, corp=corp_name))
+        os.system(UDPIPE_PATH + ' --train --tokenizer=none --tagger=none models/parser_{mod} {corp}'\
+            .format(mod=model_name, corp=corp_name))
+    else:
+        print('Model {} already exists'.format(model_name))
+
+
+def delexicalize(corp_name, model_name):
+    with open(os.path.expanduser(corp_name), 'r') as f:
+        lines = f.read().split('\n')
+        for i, line in enumerate(lines):
+            if '\t' in line:
+                cols = line.split('\t')
+                line = cols[0] + '\t_\t_\t' + '\t'.join(cols[3:])
+                lines[i] = line
+    with open('delexicalised.conllu', 'w') as f:
+        f.write('\n'.join(lines))
 
 
 def prepare_test_data(model_name):
@@ -36,12 +57,16 @@ def prepare_test_data(model_name):
 
 def predict(model_name):
     prepare_test_data(model_name)
-    if os.path.exists('models/{}'.format(model_name)):
-        os.system(
-            UDPIPE_PATH \
-            + ' --tag --parse models/{0} test_{0}.conllu > predicted/{0}.conllu'\
-            .format(model_name)
-            )
+    os.system(
+        UDPIPE_PATH \
+        + ' --tag models/tagger_{0} test_{0}.conllu > tagged_test_{0}.conllu'\
+        .format(model_name)
+        )
+    os.system(
+        UDPIPE_PATH \
+        + ' parse models/parser_{0} tagged_test_{0}.conllu > predicted/{0}.conllu'\
+        .format(model_name)
+        )
 
 
 def evaluate(model_name):
@@ -53,6 +78,8 @@ def evaluate(model_name):
 
 def cleanup(model_name):
     os.remove('test_{}.conllu'.format(model_name))
+    os.remove('tagged_test_{}.conllu'.format(model_name))
+    os.remove('delexicalised.conllu')
 
 
 def main():
@@ -65,7 +92,9 @@ Example:\n    python3 train_model.py rus.conllu rus.udpipe
         quit()
     corp_name, model_name = sys.argv[1:3]
     make_tmp_dirs()
-    train(corp_name, model_name)
+    train_tagger(corp_name, model_name)
+    delexicalize(corp_name, model_name)
+    train_parser('delexicalised.conllu', model_name)
     predict(model_name)
     evaluate(model_name)
     cleanup(model_name)

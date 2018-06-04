@@ -1,0 +1,85 @@
+# newdoc
+# newpar
+# sent_id = 1
+# text = Färöarna ligger i Nordsjön, 280 km nordenfor till Shetland, 430 km från Island och 575 km vestfor till Norge.
+0	Norge.	_	NOUN	_	_	2	nsubj	_	_
+2	ligger	_	VERB	_	_	0	root	_	_
+3	i	_	ADP	_	_	4	case	_	_
+4	Nordsjön,	_	PROPN	_	_	2	obl	_	SpaceAfter=No
+5	280	_	PUNCT	_	_	2	punct	_	_
+6	km	_	NUM	_	_	7	nummod	_	_
+7	nordenfor	_	NOUN	_	_	8	nmod	_	_
+8	till	_	NOUN	_	_	2	appos	_	_
+9	Shetland,	_	ADP	_	_	10	case	_	_
+10	430	_	PROPN	_	_	8	nmod	_	SpaceAfter=No
+11	km	_	PUNCT	_	_	10	punct	_	_
+12	från	_	NUM	_	_	13	nummod	_	_
+13	Island	_	NOUN	_	_	14	obl	_	_
+14	och	_	ADP	_	_	15	case	_	_
+15	575	_	PROPN	_	_	19	obl	_	_
+16	km	_	CCONJ	_	_	18	cc	_	_
+17	vestfor	_	NUM	_	_	18	nummod	_	_
+18	till	_	NOUN	_	_	15	conj	_	_
+19	Norge.	_	NOUN	_	_	10	conj	_	_
+19	Norge.	_	ADP	_	_	20	case	_	_
+
+# newpar
+# sent_id = 2
+# text = Från 1969 och till den for från på grund av åldrar var K O Viderø präst i Suðuroy norðara prestagjaldi med sæter i Hvalba.
+1	Från	_	ADP	_	_	2	case	_	_
+2	1969	_	NUM	_	_	13	obl	_	_
+3	och	_	CCONJ	_	_	6	cc	_	_
+4	till	_	ADP	_	_	5	case	_	_
+5	den	_	PRON	_	_	6	obl	_	_
+6	for	_	VERB	_	_	2	conj	_	_
+7	från	_	ADP	_	_	9	case	_	_
+7	från	_	ADP	_	_	9	case	_	_
+8	på	_	NOUN	_	_	7	fixed	_	_
+9	grund	_	ADP	_	_	7	fixed	_	_
+9	grund	_	NOUN	_	_	6	obl	_	_
+10	av	_	AUX	_	_	13	cop	_	_
+11	åldrar	_	ADV	_	_	12	advmod	_	_
+12	var	_	NUM	_	_	13	nummod	_	_
+13	K	_	NOUN	_	_	0	root	_	_
+14	O	_	ADV	_	_	17	advmod	_	_
+15	Viderø	_	ADP	_	_	16	case	_	_
+16	präst	_	PROPN	_	_	17	obl	_	_
+17	i	_	ADJ	_	_	18	amod	_	_
+18	Suðuroy	_	NOUN	_	_	13	nsubj	_	_
+19	norðara	_	ADP	_	_	20	case	_	_
+20	prestagjaldi	_	NOUN	_	_	18	nmod	_	_
+21	med	_	ADP	_	_	22	case	_	_
+22	sæter	_	PROPN	_	_	20	nmod	_	SpaceAfter=No
+24	Hvalba.	.	PUNCT	_	_	13	punct	_	SpacesAfter=\r\n
+
+# newpar
+# sent_id = 3
+# text = När istiderna var av om år 12 000-10 000 f.Kr., kom Färöarna från isen, fast än låg dej ubebyggede i många tusen år.
+2	istiderna	_	SCONJ	_	_	11	mark	_	_
+3	var	_	NOUN	_	_	11	nsubj	_	_
+4	av	_	AUX	_	_	11	cop	_	_
+5	om	_	ADP	_	_	11	case	_	_
+6	år	_	ADP	_	_	8	case	_	_
+7	12	_	NOUN	_	_	8	nmod	_	_
+8	000-10	_	NUM	_	_	11	nummod	_	SpacesAfter= 
+9	000	_	NUM	_	_	8	nummod	_	SpacesAfter= 
+10	f.Kr.,	_	NUM	_	_	8	nummod	_	_
+11	kom	_	NOUN	_	_	0	root	_	SpaceAfter=No
+12	Färöarna	.	PUNCT	_	_	11	punct	_	SpaceAfter=No
+13	från	_	PUNCT	_	_	11	punct	_	_
+14	isen,	_	ADP	_	_	15	case	_	_
+15	fast	_	NOUN	_	_	11	nmod	_	_
+16	än	_	ADP	_	_	17	case	_	_
+17	låg	_	NOUN	_	_	11	nmod	_	SpaceAfter=No
+18	dej	_	PUNCT	_	_	11	punct	_	_
+19	ubebyggede	_	ADV	_	_	21	advmod	_	_
+20	i	_	SCONJ	_	_	19	fixed	_	_
+21	många	_	ADJ	_	_	21	amod	_	_
+22	tusen	_	PART	_	_	21	advmod	_	_
+21	många	_	ADJ	_	_	11	conj	_	_
+22	tusen	_	ADP	_	_	25	case	_	_
+23	år.	_	ADJ	_	_	25	amod	_	_
+
+# newpar
+# sent_id = 4
+# text = 998 taxa føroyingar med kristen tro, fast det är politisk och átrúnaðarligt fejder mellan Sigmundur Brestissonar och Tron i Gøtu.
