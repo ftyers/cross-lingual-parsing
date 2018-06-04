@@ -36,10 +36,10 @@ def main():
 		treebank = [Sentence(s) for s in sents if s]
 	treebank = validate(treebank)
 	# print(treebank)
-	# if not os.path.exists('validated'):
-	# 	os.mkdir('validated')
-	# with open('validated/' + sys.argv[1], 'w') as f:
-	# 	f.write('\n\n'.join(treebank))
+	if not os.path.exists('validated'):
+		os.mkdir('validated')
+	with open('validated/' + sys.argv[1], 'w') as f:
+		f.write('\n\n'.join(treebank))
 
 
 if __name__ == '__main__':
