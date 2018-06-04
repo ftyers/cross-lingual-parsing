@@ -3,7 +3,7 @@ import os
 import sys
 
 # the path to your UDPipe binary
-UDPIPE_PATH = '~/Documents/udpipe-1.2.0-bin/bin-linux64/udpipe'
+UDPIPE_PATH = '/home/melanoya/UD-maga/udpipe'
 
 
 def make_tmp_dirs():
