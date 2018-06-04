@@ -2,7 +2,6 @@ import random
 import os
 import sys
 
-DELEXICALIZE = False # should be true with original language treebanks, False with projections 
 UDPIPE_PATH = '~/Documents/udpipe-1.2.0-bin/bin-linux64/udpipe' # the path to your UDPipe binary
 FAR_TEST = '~/Documents/UD_Faroese-OFT/fo_oft-ud-test.conllu' # the path to faroese test treebank
 
@@ -21,18 +20,6 @@ def train(corp_name, model_name):
             .format(mod=model_name, corp=corp_name))
     else:
         print('Model {} already exists'.format(model_name))
-
-
-def delexicalize(corp_name, model_name):
-    with open(os.path.expanduser(corp_name), 'r') as f:
-        lines = f.read().split('\n')
-        for i, line in enumerate(lines):
-            if '\t' in line:
-                cols = line.split('\t')
-                line = cols[0] + '\t_\t_\t' + '\t'.join(cols[3:])
-                lines[i] = line
-    with open('delexicalised.conllu', 'w') as f:
-        f.write('\n'.join(lines))
 
 
 def prepare_test_data(model_name):
@@ -66,8 +53,6 @@ def evaluate(model_name):
 
 def cleanup(model_name):
     os.remove('test_{}.conllu'.format(model_name))
-    if DELEXICALIZE:
-        os.remove('delexicalised.conllu')
 
 
 def main():
@@ -80,9 +65,6 @@ Example:\n    python3 train_model.py rus.conllu rus.udpipe
         quit()
     corp_name, model_name = sys.argv[1:3]
     make_tmp_dirs()
-    if DELEXICALIZE:
-        delexicalize(corp_name, model_name)
-        corp_name = 'delexicalised.conllu'
     train(corp_name, model_name)
     predict(model_name)
     evaluate(model_name)
