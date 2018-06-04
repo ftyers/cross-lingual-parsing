@@ -64,7 +64,7 @@ def predict(model_name):
         )
     os.system(
         UDPIPE_PATH \
-        + ' parse models/parser_{0} tagged_test_{0}.conllu > predicted/{0}.conllu'\
+        + ' --parse models/parser_{0} tagged_test_{0}.conllu > predicted/{0}.conllu'\
         .format(model_name)
         )
 
