@@ -4,18 +4,18 @@ import sys
 # $ python3 ../../utils/project-aligned-trees.py fao_wiki.apertium.fao-dan.parsed.txt fao_wiki.apertium.fao-dan.align.txt fao_wiki.apertium.fao-dan.input.txt 
 # for example, python3 ud-parser.py fast_align_res.txt ud_results.txt de-ru.txt
 
-if len(sys.argv) < 3: 
-	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
-	sys.exit(-1)
+# if len(sys.argv) < 3: 
+# 	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
+# 	sys.exit(-1)
 
-align = open(sys.argv[1], 'r').readlines()
-ud = open(sys.argv[2], 'r').readlines()
-corpora = open(sys.argv[3], 'r').readlines()
+# align = open(sys.argv[1], 'r').readlines()
+# ud = open(sys.argv[2], 'r').readlines()
+# corpora = open(sys.argv[3], 'r').readlines()
 
 
-# align = open('align_res.txt', 'r').readlines()
-# ud = open('ud_res.txt', 'r').readlines()
-# corpora = open('yiddish_german_google_cleared_01.txt', 'r').readlines()
+align = open('align.txt', 'r').readlines()
+ud = open('ud.txt', 'r').readlines()
+corpora = open('corpora.txt', 'r').readlines()
 
 
 def corpora_arr(corpora):
@@ -31,11 +31,17 @@ def align_arr(align):
 	for line in align:
 		d = {}
 		# print(line)
-		for pattern in ([word.split('-') for word in line.replace('\n', '').split()]):
-			# print(pattern)
+
+		for word in line.replace('\n', '').split():
+			pattern = word.split('-')
 			p0 = int(pattern[0])
 			p1 = int(pattern[1])
+			# if p0 not in d:
 			d[p0] = p1
+			# ЗДЕСЬ МАЛЕНЬКИЙ БАГ. ЕСЛИ ONE-TO-TWO, ТО ОСТАЕТСЯ ПЕВРОЕ ONE-TO-ONE. (ВОПРОС СКОРЕЕ ИДЕОЛОГИЧЕСКИЙ, НАДО БУДЕТ ПОТОМ ПОДУМАТЬ, ЧТО С ЭТИМ ДЕЛАТЬ)
+			# else:
+			# 	print(p0, p1)
+		# print(d)
 		arr.append(d)
 	return arr
 
@@ -104,12 +110,21 @@ def zum_align(align, ud_indexes):
 
 def check_align(align, ud_indexes):
 	# print("ALIGN ", align)
+	# print("UD_INDEXES ", ud_indexes)
 	for i in ud_indexes:
+		# print(i)
 		try:
 			align[int(i)-1]
+			# print('ALIGN', align[int(i)-1])
 
 		except KeyError:
-			align[int(i)-1] = int(i)-2
+			a = int(i)-2
+			if a >= 0:
+				align[int(i)-1] = int(i)-2
+				# print(align[int(i)-1], int(i)-2)
+			else:
+				align[int(i)-1] = int(i)-1
+				# print(align[int(i)-1], int(i)-1)
 		
 	# print('check_align RESULT', align)
 	return align
@@ -171,13 +186,15 @@ def main(align, ud, corpora):
 		file.write('# sent_id = ' + str(i+1) + '\n')
 		file.write('# text = ' + ' '.join(corpora_res[i][0]) + '\n')
 		# print('UD RES[1]', ud_res[i])
+
 		source_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
+		# print(source_indexes)
+		# print(align_res[i])
 		if '-' in ''.join(source_indexes):
-			# print('ALIGN RESULT', align_res[i])
+			# print('ALIGN RESULT with - ', align_res[i])
 			transfer_tree(i, source_indexes, zum_align(align_res[i], source_indexes), ud_res[i], corpora_res[i], file)
 		else:
 			# print('ALIGN RESULT', align_res[i])
 			transfer_tree(i, source_indexes, check_align(align_res[i], source_indexes), ud_res[i], corpora_res[i], file)
-
 
 main(align, ud, corpora)

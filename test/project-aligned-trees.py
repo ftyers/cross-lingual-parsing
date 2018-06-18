@@ -36,8 +36,8 @@ def align_arr(align):
 			pattern = word.split('-')
 			p0 = int(pattern[0])
 			p1 = int(pattern[1])
-			if p0 not in d:
-				d[p0] = p1
+			# if p0 not in d:
+			d[p0] = p1
 			# ЗДЕСЬ МАЛЕНЬКИЙ БАГ. ЕСЛИ ONE-TO-TWO, ТО ОСТАЕТСЯ ПЕВРОЕ ONE-TO-ONE. (ВОПРОС СКОРЕЕ ИДЕОЛОГИЧЕСКИЙ, НАДО БУДЕТ ПОТОМ ПОДУМАТЬ, ЧТО С ЭТИМ ДЕЛАТЬ)
 			# else:
 			# 	print(p0, p1)
@@ -109,18 +109,24 @@ def zum_align(align, ud_indexes):
 
 
 def check_align(align, ud_indexes):
-	print("ALIGN ", align)
+	# print("ALIGN ", align)
+	# print("UD_INDEXES ", ud_indexes)
 	for i in ud_indexes:
-		print(i)
+		# print(i)
 		try:
 			align[int(i)-1]
-			print('ALIGN', align[int(i)-1])
+			# print('ALIGN', align[int(i)-1])
 
 		except KeyError:
-			align[int(i)-1] = int(i)-2
-			print(align[int(i)-1], int(i)-2)
+			a = int(i)-2
+			if a >= 0:
+				align[int(i)-1] = int(i)-2
+				# print(align[int(i)-1], int(i)-2)
+			else:
+				align[int(i)-1] = int(i)-1
+				# print(align[int(i)-1], int(i)-1)
 		
-	print('check_align RESULT', align)
+	# print('check_align RESULT', align)
 	return align
 
 
@@ -182,10 +188,10 @@ def main(align, ud, corpora):
 		# print('UD RES[1]', ud_res[i])
 
 		source_indexes = [ud_res[i][j+1][0] for j in range(0, len(ud_res[i])-1)]
-		print(source_indexes)
+		# print(source_indexes)
 		# print(align_res[i])
 		if '-' in ''.join(source_indexes):
-			# print('ALIGN RESULT', align_res[i])
+			# print('ALIGN RESULT with - ', align_res[i])
 			transfer_tree(i, source_indexes, zum_align(align_res[i], source_indexes), ud_res[i], corpora_res[i], file)
 		else:
 			# print('ALIGN RESULT', align_res[i])
