@@ -4,18 +4,18 @@ import sys
 # $ python3 ../../utils/project-aligned-trees.py fao_wiki.apertium.fao-dan.parsed.txt fao_wiki.apertium.fao-dan.align.txt fao_wiki.apertium.fao-dan.input.txt 
 # for example, python3 ud-parser.py fast_align_res.txt ud_results.txt de-ru.txt
 
-# if len(sys.argv) < 3: 
-# 	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
-# 	sys.exit(-1)
+if len(sys.argv) < 3: 
+	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
+	sys.exit(-1)
 
-# align = open(sys.argv[1], 'r').readlines()
-# ud = open(sys.argv[2], 'r').readlines()
-# corpora = open(sys.argv[3], 'r').readlines()
+align = open(sys.argv[1], 'r').readlines()
+ud = open(sys.argv[2], 'r').readlines()
+corpora = open(sys.argv[3], 'r').readlines()
 
 
-align = open('align.txt', 'r').readlines()
-ud = open('ud.txt', 'r').readlines()
-corpora = open('corpora.txt', 'r').readlines()
+# align = open('align.txt', 'r').readlines()
+# ud = open('ud.txt', 'r').readlines()
+# corpora = open('corpora.txt', 'r').readlines()
 
 
 def corpora_arr(corpora):
