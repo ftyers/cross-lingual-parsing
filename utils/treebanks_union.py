@@ -1,10 +1,11 @@
+import random
 from conllu_parser import *
 
 
 TREEBANKS = [
 'fao_wiki.apertium.nob-fao.udpipe.projected.conllu',
 'fao_wiki.apertium.nno-fao.udpipe.projected.conllu',
-'fao_wiki.apertium.swe-fao.udpipe.projected.conllu',
+'first_half.conllu',
 'fao_wiki.apertium.dan-fao.udpipe.projected.conllu'
 ]
 
@@ -19,15 +20,7 @@ def treebanks_dict():
 
 			whole = one_treebank_dict(sents, whole)
 	print(len(whole))
-	trnum = 0
-	tnum = 0
-	for num in whole:
-		if len(whole[num]) == 3:
-			trnum += 1
-		elif len(whole[num]) == 2:
-			tnum += 1
-	print(trnum)
-	print(tnum)
+	return whole
 
 
 def one_treebank_dict(sents, whole):
@@ -44,6 +37,14 @@ def one_treebank_dict(sents, whole):
 	return whole
 
 
+def random_union(tbs):
+	result = []
+	for num in tbs:
+		sent = random.choice(tbs[num])
+		result.append(str(sent))
+	return result
+
+
 def unite_treebanks(tbs):
 	pass
 
@@ -52,4 +53,7 @@ def unite_treebanks(tbs):
 
 
 if __name__ == '__main__':
-	treebanks_dict()
+	tbs = treebanks_dict()
+	res = random_union(tbs)
+	with open('random_union.conllu', 'w') as f:
+		f.write('\n\n'.join(res))
