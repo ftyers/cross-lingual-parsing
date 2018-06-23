@@ -16,6 +16,22 @@ class CurrentGraph:
 			best_edge = max(node.in_edges, key=lambda x: x.weight)
 			self.edges.append(best_edge)
 
+	def build_sentence(self):
+		tokens = []
+		for edge in self.edges:
+			for node in self.nodes:
+				if node.id == edge.to:
+					deprel = edge.deprels[0] ## todo: better choose most frequent
+
+					# rewriting head and deprel
+					features = list(node.features)
+					features[6] = str(edge.fr)
+					features[7] = deprel
+					tokens.append('\t'.join(features))
+					break
+		return '\n'.join(tokens)
+
+
 	def make_children(self): ## TODO wrong indices error handling
 		for edge in self.edges:
 			if edge.fr != 0:
@@ -116,10 +132,10 @@ def get_treebank():
 			multisentences.append(MultiSentence([li[i] for li in treebank]))
 		except DifferentLength:
 			diff_len += 1
-			print(treebank[0][i])
-			print()
-			print(treebank[1][i])
-			quit()
+			# print(treebank[0][i])
+			# print()
+			# print(treebank[1][i])
+			# raise DifferentLength
 	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
 	return multisentences
 
@@ -153,21 +169,46 @@ def mst():
 	pass
 
 
+def get_combined(treebank):
+	combined = []
+	nok, cyclic = 0, 0
+	for i, ms in enumerate(treebank):
+		try:
+			cur_g = CurrentGraph(ms.graph)
+			# print(cur_g)
+			# print('---')
+			if cycle_detection(cur_g):
+				# print('cyclic:')
+				# print(ms.sentences[0])
+				# print()
+				combined.append(str(ms.sentences[0]))
+				cyclic += 1
+			else:
+				sent = cur_g.build_sentence()
+				comments = ''.join(ms.sentences[0].comments)
+				combined.append(comments + sent)
+				nok += 1
+		except (ConllIndexError, IndexError) as e:
+			print('Sentence {}: a problem with ids.'.format(i))
+	print('Number of sentences in combined model: ' + str(nok))
+	print('cyclic: ' + str(cyclic))
+	print('treebank len: '  + str(len(combined)))
+	return combined
+
+
+
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
 	treebank = get_treebank()
-	print(treebank[0].sentences[0])
-	cur_g = CurrentGraph(treebank[0].graph)
-	print(cur_g)
-	cycle_detection(cur_g)
-	# for i, ms in enumerate(treebank):
-	# 	try:
-	# 		cur_g = CurrentGraph(ms.graph)
-	# 		if cycle_detection(cur_g):
-	# 			print('cyclic:')
-	# 			print(ms.sentences[0])
-	# 			print()
-	# 	except (ConllIndexError, IndexError) as e:
-	# 		print('Sentence {}: a problem with ids.'.format(i))
+	# print(treebank[0].sentences[0])
+	# cur_g = CurrentGraph(treebank[0].graph)
+	# print(cur_g)
+	# if not cycle_detection(cur_g):
+	# 	sent = cur_g.build_sentence()
+	# 	comments = ''.join(treebank[0].sentences[0].comments)
+	# 	print(comments + sent)
+	combined = get_combined(treebank)
+	with open('tmp/combined_four.conllu', 'w') as f:
+		f.write('\n\n'.join(combined))
