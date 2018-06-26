@@ -21,7 +21,8 @@ class CurrentGraph:
 		for edge in self.edges:
 			for node in self.nodes:
 				if node.id == edge.to:
-					deprel = edge.deprels[0] ## todo: better choose most frequent
+					# coosing the most common deprel
+					deprel = max(set(node.deprels), key=node.deprels.count)
 
 					# rewriting head and deprel
 					features = list(node.features)
@@ -50,7 +51,7 @@ class CurrentGraph:
 
 def cycle_detection(graph):
 	"""
-	Takes an instances of CurrentGraph. Returns a list with cycles,
+	Takes an instance of CurrentGraph. Returns a list with cycles,
 	if there are any.
 	"""
 	cycles = []
@@ -165,10 +166,6 @@ def get_spanning_tree(G, W):
 	return MST
 
 
-def mst():
-	pass
-
-
 def get_combined(treebank):
 	combined = []
 	nok, cyclic = 0, 0
@@ -179,8 +176,8 @@ def get_combined(treebank):
 			# print('---')
 			if cycle_detection(cur_g):
 				# print('cyclic:')
-				# print(ms.sentences[0])
-				# print()
+				# print(cur_g.build_sentence())
+				# quit()
 				combined.append(str(ms.sentences[0]))
 				cyclic += 1
 			else:
@@ -210,5 +207,5 @@ if __name__ == '__main__':
 	# 	comments = ''.join(treebank[0].sentences[0].comments)
 	# 	print(comments + sent)
 	combined = get_combined(treebank)
-	with open('tmp/combined_four.conllu', 'w') as f:
+	with open('tmp/combined_three.conllu', 'w') as f:
 		f.write('\n\n'.join(combined))

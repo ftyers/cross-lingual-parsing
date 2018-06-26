@@ -123,7 +123,9 @@ class FullGraph:
 		for node in self.nodes:
 			for fr, to in self.edges:
 				if to == node.id:
-					node.in_edges.append(self.edges[(fr, to)])
+					edge = self.edges[(fr, to)]
+					node.in_edges.append(edge)
+					node.deprels.append(edge.deprel)
 
 
 class Node:
@@ -137,6 +139,7 @@ class Node:
 		self.features = features
 		self.id = int(features[0])
 		self.in_edges = []
+		self.deprels = []
 		self.children = [] # is filled only in CurrentGraph, untouched in FullGraph
 
 	def __repr__(self):
@@ -153,7 +156,7 @@ class Edge:
 		self.fr = source
 		self.to = destination
 		self.weight = 0
-		self.deprels = [deprel]
+		self.deprel = deprel
 
 	def __repr__(self):
 		return 'from ' + str(self.fr) + ', to ' + str(self.to) + ', weight '\
