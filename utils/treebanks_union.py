@@ -5,7 +5,7 @@ from conllu_parser import *
 TREEBANKS = [
 'fao_wiki.apertium.nob-fao.udpipe.projected.conllu',
 'fao_wiki.apertium.nno-fao.udpipe.projected.conllu',
-'first_half.conllu',
+'fao_wiki.apertium.swe-fao.udpipe.projected.conllu',
 'fao_wiki.apertium.dan-fao.udpipe.projected.conllu'
 ]
 
@@ -66,6 +66,8 @@ def fast_write_3_4(whole):
 			four_sents[1].append(str(sents[1]))
 			four_sents[2].append(str(sents[2]))
 			four_sents[3].append(str(sents[3]))
+	print('three_sents: ' + str(len(three_sents[0])))
+	print('four_sents: ' + str(len(four_sents[0])))
 	with open('tmp/three_1st.conllu', 'w') as f:
 		f.write('\n\n'.join(three_sents[0]))
 	with open('tmp/three_2nd.conllu', 'w') as f:
@@ -84,7 +86,7 @@ def fast_write_3_4(whole):
 
 if __name__ == '__main__':
 	union = treebanks_dict()
-	# fast_write_3_4(union)
+	fast_write_3_4(union)
 
 	# tbs = treebanks_dict()
 	# res = random_union(tbs)
