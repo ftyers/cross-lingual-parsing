@@ -22,7 +22,12 @@ class CurrentGraph:
 			for node in self.nodes:
 				if node.id == edge.to:
 					# coosing the most common deprel
-					deprel = max(set(node.deprels), key=node.deprels.count)
+					if edge.fr == 0:
+						deprel = 'root'
+					else:
+						if 'root' in node.deprels:
+							node.deprels.remove('root')
+						deprel = max(set(node.deprels), key=node.deprels.count)
 
 					# rewriting head and deprel
 					features = list(node.features)
@@ -116,6 +121,7 @@ def get_treebank():
 	sentences are grouped by the id of the sentence.
 	"""
 	treebank = []
+	nob = []
 	for fname in sys.argv[1:]:
 		with open(fname) as f:
 			sents = f.read().split('\n\n')
@@ -133,12 +139,13 @@ def get_treebank():
 			multisentences.append(MultiSentence([li[i] for li in treebank]))
 		except DifferentLength:
 			diff_len += 1
+			nob.append(treebank[0][i])
 			# print(treebank[0][i])
 			# print()
 			# print(treebank[1][i])
 			# raise DifferentLength
 	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
-	return multisentences
+	return multisentences, nob
 
 
 def get_spanning_tree(G, W):
@@ -174,9 +181,12 @@ def get_combined(treebank):
 			cur_g = CurrentGraph(ms.graph)
 			# print(cur_g)
 			# print('---')
-			if cycle_detection(cur_g):
+			cycles = cycle_detection(cur_g)
+			if cycles:
 				# print('cyclic:')
 				# print(cur_g.build_sentence())
+				# print()
+				# print(cycles[0])
 				# quit()
 				combined.append(str(ms.sentences[0]))
 				cyclic += 1
@@ -193,12 +203,19 @@ def get_combined(treebank):
 	return combined
 
 
+# def max_in_edge_cycle(cur_g, cycle):
+# 	greatest_incoming = None
+# 	for node in cycle:
+# 		cur_greatest = 
+# 	return greatest_incoming
+
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
-	treebank = get_treebank()
+	treebank, difflen_nob = get_treebank()
+	print('difflen_nob: ' + str(len(difflen_nob)))
 	# print(treebank[0].sentences[0])
 	# cur_g = CurrentGraph(treebank[0].graph)
 	# print(cur_g)
@@ -209,3 +226,5 @@ if __name__ == '__main__':
 	combined = get_combined(treebank)
 	with open('tmp/combined_three.conllu', 'w') as f:
 		f.write('\n\n'.join(combined))
+	with open('tmp/combined_difflen_three.conllu', 'w') as f:
+		f.write('\n\n'.join(str(s) for s in difflen_nob))
