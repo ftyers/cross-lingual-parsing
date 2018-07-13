@@ -2,8 +2,8 @@ import random
 import os
 import sys
 
-UDPIPE_PATH = '/home/pavel/udpipe-1.2.0-bin/bin-linux64/udpipe' # the path to your UDPipe binary
-FAR_TEST = '/home/pavel/UD_Faroese-OFT/fo_oft-ud-test.conllu' # the path to faroese test treebank
+UDPIPE_PATH = '~/Documents/udpipe-1.2.0-bin/bin-linux64/udpipe' # the path to your UDPipe binary
+FAR_TEST = '~/Documents/UD_Faroese-OFT/fo_oft-ud-test.conllu' # the path to faroese test treebank
 
 
 def make_tmp_dirs():
