@@ -119,7 +119,7 @@ class FullGraph:
 				cur_edge.weight += 1
 				self.edges[(fr, to)] = cur_edge
 
-		# fill the in_edges lists fir each node
+		# fill the in_edges lists for each node
 		for node in self.nodes:
 			for fr, to in self.edges:
 				if to == node.id:
@@ -140,7 +140,6 @@ class Node:
 		self.id = int(features[0])
 		self.in_edges = []
 		self.deprels = []
-		self.children = [] # is filled only in CurrentGraph, untouched in FullGraph
 
 	def __repr__(self):
 		return '\t'.join(self.features)

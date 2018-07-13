@@ -5,14 +5,14 @@ from conllu_parser import *
 
 class CurrentGraph:
 
-	def __init__(self, full_graph):
-		self.nodes = full_graph.nodes
-		self.edges = []
+	def __init__(self, nodes):
+		self.nodes = nodes
 		self.choose_edges()
 		self.make_children()
 
 	def choose_edges(self):
 		# for each node, chosing the incoming edge eith the highest weight
+		self.edges = []
 		for node in self.nodes:
 			best_edge = max(node.in_edges, key=lambda x: x.weight)
 			self.edges.append(best_edge)
@@ -40,6 +40,11 @@ class CurrentGraph:
 
 
 	def make_children(self): ## TODO wrong indices error handling
+
+		# crearing _clean_ children attribute for each node
+		for node in self.nodes:
+			node.children = []
+
 		for edge in self.edges:
 			if edge.fr != 0:
 				cur_token = self.nodes[edge.fr - 1]
@@ -147,12 +152,6 @@ def get_treebank():
 				multisentences.append(MultiSentence(fix_for_diff_len(treebank, lens, i)))
 			else:
 				nob.append(treebank[0][i])
-			# print(treebank[0][i])
-			# print()
-			# print(treebank[1][i])
-			# print()
-			# print(treebank[2][i])
-			# print('\n\n---\n\n')
 			# raise DifferentLength
 	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
 	return multisentences, nob
@@ -171,7 +170,7 @@ def get_combined(treebank):
 	nok, cyclic = 0, 0
 	for i, ms in enumerate(treebank):
 		try:
-			cur_g = CurrentGraph(ms.graph)
+			cur_g = CurrentGraph(ms.graph.nodes)
 			# print(cur_g)
 			# print('---')
 			cycles = cycle_detection(cur_g)
@@ -181,6 +180,7 @@ def get_combined(treebank):
 				# print(cur_g)
 				# print()
 				# print(cycles[0])
+				# print()
 
 				# for cycle in cycles:
 				# 	pass
@@ -201,11 +201,18 @@ def get_combined(treebank):
 	return combined
 
 
-def max_in_edge_cycle(cur_g, cycle):
-	greatest_incoming = None
+def resolve_cycle(cur_g, cycle):
+	indices = [node.id for node in cycle]
+
+	# looking for maximum incoming edge
+	max_incoming = max(cycle[0].in_edges, key=lambda x: x.weight) # the first case TODO: __incoming__
 	for node in cycle:
-		cur_best = max(node.in_edges, key=lambda x: x.weight)
-	return greatest_incoming
+		cur_max = max(node.in_edges, key=lambda x: x.weight)
+		
+		if cur_max.weight > max_incoming.weight and cur_max:
+			max_incoming = cur_max
+
+	return cycle
 
 
 if __name__ == '__main__':
@@ -215,14 +222,14 @@ if __name__ == '__main__':
 	treebank, difflen_nob = get_treebank()
 	print('difflen_nob: ' + str(len(difflen_nob)))
 	# print(treebank[0].sentences[0])
-	# cur_g = CurrentGraph(treebank[0].graph)
+	# cur_g = CurrentGraph(treebank[0].graph.nodes)
 	# print(cur_g)
 	# if not cycle_detection(cur_g):
 	# 	sent = cur_g.build_sentence()
 	# 	comments = ''.join(treebank[0].sentences[0].comments)
 	# 	print(comments + sent)
 	combined = get_combined(treebank)
-	with open('tmp/combined_three.conllu', 'w') as f:
+	with open('tmp/combined_four.conllu', 'w') as f:
 		f.write('\n\n'.join(combined))
-	with open('tmp/combined_difflen_three.conllu', 'w') as f:
+	with open('tmp/combined_difflen_four.conllu', 'w') as f:
 		f.write('\n\n'.join(str(s) for s in difflen_nob))
