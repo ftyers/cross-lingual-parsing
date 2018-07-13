@@ -1,4 +1,5 @@
 import sys
+from collections import Counter
 from conllu_parser import *
 
 
@@ -139,38 +140,30 @@ def get_treebank():
 			multisentences.append(MultiSentence([li[i] for li in treebank]))
 		except DifferentLength:
 			diff_len += 1
-			nob.append(treebank[0][i])
+
+			
+			lens = Counter([len(li[i]) for li in treebank])
+			if 3 in lens.values(): # если есть хотя бы три предложения одинаковой длины
+				multisentences.append(MultiSentence(fix_for_diff_len(treebank, lens, i)))
+			else:
+				nob.append(treebank[0][i])
 			# print(treebank[0][i])
 			# print()
 			# print(treebank[1][i])
+			# print()
+			# print(treebank[2][i])
+			# print('\n\n---\n\n')
 			# raise DifferentLength
 	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
 	return multisentences, nob
 
 
-def get_spanning_tree(G, W):
-	MST = {} # This is the first MST subgraph
-	
-	print('G',G)
-	print('W',W)
-	for i in G:
-		print(i, G[i])
-		# the root node has no incoming arcs
-		if i == 0:
-			MST[0] = []
-			continue
-		if i not in MST:
-			MST[i] = []
-		# find incoming arcs
-		incoming = [w for w in G.keys() if i in G[w]]
-		max_j = -1
-		if incoming != []:
-			# max_j is the maximum incoming arc
-			max_j = max(incoming, key=lambda j : W[j][i])
-			if max_j not in MST:
-				MST[max_j] = []
-			MST[max_j].append(i)
-	return MST
+def fix_for_diff_len(treebank, lens, i): # TODO: fix
+	for key in lens: # получаем эту длину
+		if lens[key] == 3:
+			thelen = key
+	# предложения с одинаковой длиной
+	return [li[i] for li in treebank if len(li[i]) == thelen]
 
 
 def get_combined(treebank):
@@ -185,8 +178,13 @@ def get_combined(treebank):
 			if cycles:
 				# print('cyclic:')
 				# print(cur_g.build_sentence())
+				# print(cur_g)
 				# print()
 				# print(cycles[0])
+
+				# for cycle in cycles:
+				# 	pass
+
 				# quit()
 				combined.append(str(ms.sentences[0]))
 				cyclic += 1
@@ -203,11 +201,11 @@ def get_combined(treebank):
 	return combined
 
 
-# def max_in_edge_cycle(cur_g, cycle):
-# 	greatest_incoming = None
-# 	for node in cycle:
-# 		cur_greatest = 
-# 	return greatest_incoming
+def max_in_edge_cycle(cur_g, cycle):
+	greatest_incoming = None
+	for node in cycle:
+		cur_best = max(node.in_edges, key=lambda x: x.weight)
+	return greatest_incoming
 
 
 if __name__ == '__main__':

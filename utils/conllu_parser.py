@@ -160,7 +160,7 @@ class Edge:
 
 	def __repr__(self):
 		return 'from ' + str(self.fr) + ', to ' + str(self.to) + ', weight '\
-		       + str(self.weight) + ', labels ' + str(self.deprels)
+		       + str(self.weight) + ', labels ' + str(self.deprel)
 
 
 if __name__ == '__main__':
