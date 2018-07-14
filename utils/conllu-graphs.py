@@ -263,13 +263,6 @@ if __name__ == '__main__':
 		quit()
 	treebank, difflen_nob = get_treebank()
 	print('difflen_nob: ' + str(len(difflen_nob)))
-	# print(treebank[0].sentences[0])
-	# cur_g = CurrentGraph(treebank[0].graph.nodes)
-	# print(cur_g)
-	# if not cycle_detection(cur_g):
-	# 	sent = cur_g.build_sentence()
-	# 	comments = ''.join(treebank[0].sentences[0].comments)
-	# 	print(comments + sent)
 	combined = get_combined(treebank)
 	with open('tmp/combined_four.conllu', 'w') as f:
 		f.write('\n\n'.join(combined))
