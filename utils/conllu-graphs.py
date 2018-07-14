@@ -171,27 +171,29 @@ def get_combined(treebank):
 	for i, ms in enumerate(treebank):
 		try:
 			cur_g = CurrentGraph(ms.graph.nodes)
-			# print(cur_g)
-			# print('---')
 			cycles = cycle_detection(cur_g)
 			if cycles:
-				# print('cyclic:')
-				# print(cur_g.build_sentence())
-				# print(cur_g)
-				# print()
-				# print(cycles[0])
-				# print()
 
-				# for cycle in cycles:
-				# 	pass
+				# fixing cycles
+				changed_nodes = []
+				for cycle in cycles:
+					changed_nodes += resolve_cycle(cycle)
 
-				# quit()
-				combined.append(str(ms.sentences[0]))
-				cyclic += 1
+				# rebuilding the graph
+				for node in changed_nodes:
+					cur_g.nodes[node.id - 1] = node
+				cur_g.choose_edges()
+				cur_g.make_children()
+				new_cycles = cycle_detection(cur_g)
+
+				if new_cycles:
+					combined.append(str(ms.sentences[0]))
+					cyclic += 1
+				else:
+					combined.append(serialize_valid_mst(cur_g, ms))
+					nok += 1
 			else:
-				sent = cur_g.build_sentence()
-				comments = ''.join(ms.sentences[0].comments)
-				combined.append(comments + sent)
+				combined.append(serialize_valid_mst(cur_g, ms))
 				nok += 1
 		except (ConllIndexError, IndexError) as e:
 			print('Sentence {}: a problem with ids.'.format(i))
@@ -201,18 +203,52 @@ def get_combined(treebank):
 	return combined
 
 
-def resolve_cycle(cur_g, cycle):
-	indices = [node.id for node in cycle]
+def serialize_valid_mst(cur_g, ms):
+	sent = cur_g.build_sentence()
+	comments = ''.join(ms.sentences[0].comments)
+	return comments + sent
 
-	# looking for maximum incoming edge
-	max_incoming = max(cycle[0].in_edges, key=lambda x: x.weight) # the first case TODO: __incoming__
+def resolve_cycle(cycle):
+
+	max_incoming = find_max_incoming(cycle)
+	# print('max_incoming: ' + str(max_incoming))
+
+	# leaving only the node with maximum incoming edge for the node in question
+	node_id = max_incoming.to
 	for node in cycle:
-		cur_max = max(node.in_edges, key=lambda x: x.weight)
+		if node.id == node_id:
+			node.in_edges = [max_incoming]
+
+	# print(cycle)
+	# print(cycle[0].in_edges)
+	# print(cycle[1].in_edges)
+	return cycle
+
+
+def find_max_incoming(cycle):
+	"""
+	looking for maximum incoming edge
+	"""
+	indices = [node.id for node in cycle]
+	max_incoming = None
+	for node in cycle:
+		inc_edges = [e for e in node.in_edges if e.fr not in indices]
+		try:
+			cur_max = max(inc_edges, key=lambda x: x.weight)
+		except ValueError:
+			cur_max = None
+
+		# the first case
+		if max_incoming is None:
+			max_incoming = cur_max
+			continue
 		
-		if cur_max.weight > max_incoming.weight and cur_max:
+		if cur_max and cur_max.weight > max_incoming.weight:
 			max_incoming = cur_max
 
-	return cycle
+	if max_incoming is None: # kinda giving up for now. TODOL work out why it happens
+		max_incoming = cycle[0].in_edges[0]
+	return max_incoming
 
 
 if __name__ == '__main__':
