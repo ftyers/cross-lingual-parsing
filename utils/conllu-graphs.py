@@ -1,17 +1,18 @@
 import sys
+from collections import Counter
 from conllu_parser import *
 
 
 class CurrentGraph:
 
-	def __init__(self, full_graph):
-		self.nodes = full_graph.nodes
-		self.edges = []
+	def __init__(self, nodes):
+		self.nodes = nodes
 		self.choose_edges()
 		self.make_children()
 
 	def choose_edges(self):
 		# for each node, chosing the incoming edge eith the highest weight
+		self.edges = []
 		for node in self.nodes:
 			best_edge = max(node.in_edges, key=lambda x: x.weight)
 			self.edges.append(best_edge)
@@ -22,7 +23,12 @@ class CurrentGraph:
 			for node in self.nodes:
 				if node.id == edge.to:
 					# coosing the most common deprel
-					deprel = max(set(node.deprels), key=node.deprels.count)
+					if edge.fr == 0:
+						deprel = 'root'
+					else:
+						if 'root' in node.deprels:
+							node.deprels.remove('root')
+						deprel = max(set(node.deprels), key=node.deprels.count)
 
 					# rewriting head and deprel
 					features = list(node.features)
@@ -34,6 +40,11 @@ class CurrentGraph:
 
 
 	def make_children(self): ## TODO wrong indices error handling
+
+		# crearing _clean_ children attribute for each node
+		for node in self.nodes:
+			node.children = []
+
 		for edge in self.edges:
 			if edge.fr != 0:
 				cur_token = self.nodes[edge.fr - 1]
@@ -116,6 +127,7 @@ def get_treebank():
 	sentences are grouped by the id of the sentence.
 	"""
 	treebank = []
+	nob = []
 	for fname in sys.argv[1:]:
 		with open(fname) as f:
 			sents = f.read().split('\n\n')
@@ -133,37 +145,24 @@ def get_treebank():
 			multisentences.append(MultiSentence([li[i] for li in treebank]))
 		except DifferentLength:
 			diff_len += 1
-			# print(treebank[0][i])
-			# print()
-			# print(treebank[1][i])
+
+			
+			lens = Counter([len(li[i]) for li in treebank])
+			if 3 in lens.values(): # если есть хотя бы три предложения одинаковой длины
+				multisentences.append(MultiSentence(fix_for_diff_len(treebank, lens, i)))
+			else:
+				nob.append(treebank[0][i])
 			# raise DifferentLength
 	print('{} sentences out of {} were discarded because of the different size'.format(diff_len, len(treebank[0])))
-	return multisentences
+	return multisentences, nob
 
 
-def get_spanning_tree(G, W):
-	MST = {} # This is the first MST subgraph
-	
-	print('G',G)
-	print('W',W)
-	for i in G:
-		print(i, G[i])
-		# the root node has no incoming arcs
-		if i == 0:
-			MST[0] = []
-			continue
-		if i not in MST:
-			MST[i] = []
-		# find incoming arcs
-		incoming = [w for w in G.keys() if i in G[w]]
-		max_j = -1
-		if incoming != []:
-			# max_j is the maximum incoming arc
-			max_j = max(incoming, key=lambda j : W[j][i])
-			if max_j not in MST:
-				MST[max_j] = []
-			MST[max_j].append(i)
-	return MST
+def fix_for_diff_len(treebank, lens, i): # TODO: fix
+	for key in lens: # получаем эту длину
+		if lens[key] == 3:
+			thelen = key
+	# предложения с одинаковой длиной
+	return [li[i] for li in treebank if len(li[i]) == thelen]
 
 
 def get_combined(treebank):
@@ -171,19 +170,30 @@ def get_combined(treebank):
 	nok, cyclic = 0, 0
 	for i, ms in enumerate(treebank):
 		try:
-			cur_g = CurrentGraph(ms.graph)
-			# print(cur_g)
-			# print('---')
-			if cycle_detection(cur_g):
-				# print('cyclic:')
-				# print(cur_g.build_sentence())
-				# quit()
-				combined.append(str(ms.sentences[0]))
-				cyclic += 1
+			cur_g = CurrentGraph(ms.graph.nodes)
+			cycles = cycle_detection(cur_g)
+			if cycles:
+
+				# fixing cycles
+				changed_nodes = []
+				for cycle in cycles:
+					changed_nodes += resolve_cycle(cycle)
+
+				# rebuilding the graph
+				for node in changed_nodes:
+					cur_g.nodes[node.id - 1] = node
+				cur_g.choose_edges()
+				cur_g.make_children()
+				new_cycles = cycle_detection(cur_g)
+
+				if new_cycles:
+					combined.append(str(ms.sentences[0]))
+					cyclic += 1
+				else:
+					combined.append(serialize_valid_mst(cur_g, ms))
+					nok += 1
 			else:
-				sent = cur_g.build_sentence()
-				comments = ''.join(ms.sentences[0].comments)
-				combined.append(comments + sent)
+				combined.append(serialize_valid_mst(cur_g, ms))
 				nok += 1
 		except (ConllIndexError, IndexError) as e:
 			print('Sentence {}: a problem with ids.'.format(i))
@@ -193,19 +203,69 @@ def get_combined(treebank):
 	return combined
 
 
+def serialize_valid_mst(cur_g, ms):
+	sent = cur_g.build_sentence()
+	comments = ''.join(ms.sentences[0].comments)
+	return comments + sent
+
+def resolve_cycle(cycle):
+
+	max_incoming = find_max_incoming(cycle)
+	# print('max_incoming: ' + str(max_incoming))
+
+	# leaving only the node with maximum incoming edge for the node in question
+	node_id = max_incoming.to
+	for node in cycle:
+		if node.id == node_id:
+			node.in_edges = [max_incoming]
+
+	# print(cycle)
+	# print(cycle[0].in_edges)
+	# print(cycle[1].in_edges)
+	return cycle
+
+
+def find_max_incoming(cycle):
+	"""
+	looking for maximum incoming edge
+	"""
+	indices = [node.id for node in cycle]
+	max_incoming = None
+	for node in cycle:
+		inc_edges = [e for e in node.in_edges if e.fr not in indices]
+		try:
+			cur_max = max(inc_edges, key=lambda x: x.weight)
+		except ValueError:
+			cur_max = None
+
+		# the first case
+		if max_incoming is None:
+			max_incoming = cur_max
+			continue
+		
+		if cur_max and cur_max.weight > max_incoming.weight:
+			max_incoming = cur_max
+
+	if max_incoming is None: # kinda giving up for now. TODOL work out why it happens
+		max_incoming = cycle[0].in_edges[0]
+	return max_incoming
+
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print('Usage:\npython3 conllu-graphs.py treebank1.conllu [treebank2.conllu, ...]')
 		quit()
-	treebank = get_treebank()
+	treebank, difflen_nob = get_treebank()
+	print('difflen_nob: ' + str(len(difflen_nob)))
 	# print(treebank[0].sentences[0])
-	# cur_g = CurrentGraph(treebank[0].graph)
+	# cur_g = CurrentGraph(treebank[0].graph.nodes)
 	# print(cur_g)
 	# if not cycle_detection(cur_g):
 	# 	sent = cur_g.build_sentence()
 	# 	comments = ''.join(treebank[0].sentences[0].comments)
 	# 	print(comments + sent)
 	combined = get_combined(treebank)
-	with open('tmp/combined_three.conllu', 'w') as f:
+	with open('tmp/combined_four.conllu', 'w') as f:
 		f.write('\n\n'.join(combined))
+	with open('tmp/combined_difflen_four.conllu', 'w') as f:
+		f.write('\n\n'.join(str(s) for s in difflen_nob))
