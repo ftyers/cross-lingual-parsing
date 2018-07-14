@@ -2,6 +2,7 @@ import sys
 from collections import Counter
 from conllu_parser import *
 
+RECURSION_DEPTH = 10
 
 class CurrentGraph:
 
@@ -165,36 +166,41 @@ def fix_for_diff_len(treebank, lens, i): # TODO: fix
 	return [li[i] for li in treebank if len(li[i]) == thelen]
 
 
+def mst(cur_g, ms, depth=0):
+
+	if depth == RECURSION_DEPTH: # stop the recursion if the dpepth limit is exeeded
+		return str(ms.sentences[0]), False
+
+	cycles = cycle_detection(cur_g)
+	if cycles:
+		# fixing cycles
+		changed_nodes = []
+		for cycle in cycles:
+			changed_nodes += resolve_cycle(cycle)
+
+		# rebuilding the graph
+		for node in changed_nodes:
+			cur_g.nodes[node.id - 1] = node
+		cur_g.choose_edges()
+		cur_g.make_children()
+		return mst(cur_g, ms, depth=(depth+1))
+	else:
+		return serialize_valid_mst(cur_g, ms), True
+
+
+
 def get_combined(treebank):
 	combined = []
 	nok, cyclic = 0, 0
 	for i, ms in enumerate(treebank):
 		try:
 			cur_g = CurrentGraph(ms.graph.nodes)
-			cycles = cycle_detection(cur_g)
-			if cycles:
-
-				# fixing cycles
-				changed_nodes = []
-				for cycle in cycles:
-					changed_nodes += resolve_cycle(cycle)
-
-				# rebuilding the graph
-				for node in changed_nodes:
-					cur_g.nodes[node.id - 1] = node
-				cur_g.choose_edges()
-				cur_g.make_children()
-				new_cycles = cycle_detection(cur_g)
-
-				if new_cycles:
-					combined.append(str(ms.sentences[0]))
-					cyclic += 1
-				else:
-					combined.append(serialize_valid_mst(cur_g, ms))
-					nok += 1
-			else:
-				combined.append(serialize_valid_mst(cur_g, ms))
+			tree, sucess = mst(cur_g, ms)
+			combined.append(tree)
+			if sucess:
 				nok += 1
+			else:
+				cyclic += 1
 		except (ConllIndexError, IndexError) as e:
 			print('Sentence {}: a problem with ids.'.format(i))
 	print('Number of sentences in combined model: ' + str(nok))
@@ -246,7 +252,7 @@ def find_max_incoming(cycle):
 		if cur_max and cur_max.weight > max_incoming.weight:
 			max_incoming = cur_max
 
-	if max_incoming is None: # kinda giving up for now. TODOL work out why it happens
+	if max_incoming is None: # kinda giving up for now. TODO: work out why it happens
 		max_incoming = cycle[0].in_edges[0]
 	return max_incoming
 
