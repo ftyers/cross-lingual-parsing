@@ -7,7 +7,7 @@ fao─>nob(Apertium)─>nno(Apertium)
        		 |
        		 └─>dan(Google Translate,Yandex Translate,Apertium)
        		 |
-       		 └─> eng(Google Translate)                    
+       		 └─>eng(Google Translate)                    
 ```
 
 # Files
