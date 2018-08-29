@@ -39,6 +39,8 @@ def validate(treebank):
 	print('wrong_order: ' + str(len(wrong_order)))
 	print('wrong_start: ' + str(len(wrong_start)))
 	print('too_large_head: ' + str(len(too_large_head)))
+	# for item in too_large_head:
+	# 	print(item)
 	print('valid: ' + str(len(valid)))
 	return valid
 
