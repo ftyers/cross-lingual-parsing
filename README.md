@@ -22,3 +22,9 @@ The work should answer the following questions:
 * Evaluate how much adding different parsers helps
 * Evaluate how much adding more languages helps
 * Evaluate how much cleaning helps
+
+### Paper
+
+
+[Multi-source synthetic treebank creation for improved cross-lingual dependency parsing](http://universaldependencies.org/udw18/PDFs/36_Paper.pdf)
+Francis Tyers, Mariya Sheyanova, Aleksandra Martynova, Pavel Stepachev and Konstantin Vinogorodskiy
