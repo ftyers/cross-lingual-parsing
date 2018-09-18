@@ -27,4 +27,5 @@ The work should answer the following questions:
 
 
 [Multi-source synthetic treebank creation for improved cross-lingual dependency parsing](http://universaldependencies.org/udw18/PDFs/36_Paper.pdf)
+
 Francis Tyers, Mariya Sheyanova, Aleksandra Martynova, Pavel Stepachev and Konstantin Vinogorodskiy
