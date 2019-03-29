@@ -12,7 +12,7 @@ A part of software created during our research is reused in a [feature UD Annota
 
 At the moment, we have a custom extantion of UD Annotatrix with this feature.
 
-In future, it will be merged to [the main repository](https://github.com/jonorthwash/ud-annotatrix)
+In future, it will be merged to [the main repository](https://github.com/jonorthwash/ud-annotatrix).
 
 ___
 # FAQ
