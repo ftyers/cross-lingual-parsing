@@ -1,6 +1,6 @@
 from conllu_parser import Sentence
 
-with open('validated/fao_wiki.apertium.dan-fao.udpipe.projected.conllu') as f:
+with open('validated/combined_four.conllu') as f:
     t = f.read()
 sents = [Sentence(s) for s in t.split('\n\n')]
 
@@ -29,5 +29,5 @@ for sent in sents:
 print('good: ' + str(len(good)))
 print('doubleheaded: ' + str(len(doubleheaded)))
 
-with open('validated/dan', 'w') as f:
+with open('validated/comb.conllu', 'w') as f:
     f.write('\n\n'.join(str(s) for s in good))

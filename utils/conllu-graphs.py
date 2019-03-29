@@ -2,7 +2,7 @@ import sys
 from collections import Counter
 from conllu_parser import *
 
-RECURSION_DEPTH = 10
+RECURSION_DEPTH = 50
 
 class CurrentGraph:
 
@@ -169,6 +169,9 @@ def fix_for_diff_len(treebank, lens, i): # TODO: fix
 def mst(cur_g, ms, depth=0):
 
 	if depth == RECURSION_DEPTH: # stop the recursion if the dpepth limit is exeeded
+		print('cyclic sent: ')
+		print(cur_g)
+		quit()
 		return str(ms.sentences[0]), False
 
 	cycles = cycle_detection(cur_g)
