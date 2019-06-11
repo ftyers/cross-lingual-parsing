@@ -8,8 +8,8 @@ if len(sys.argv) < 3:
 	print('python3 project-aligned-trees.py <conllu output> <alignments> <parallel text>')
 	sys.exit(-1)
 
-align = open(sys.argv[1], 'r').readlines()
-ud = open(sys.argv[2], 'r').readlines()
+ud = open(sys.argv[1], 'r').readlines()
+align = open(sys.argv[2], 'r').readlines()
 corpora = open(sys.argv[3], 'r').readlines()
 
 
